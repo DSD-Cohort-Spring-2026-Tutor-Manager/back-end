@@ -1,6 +1,6 @@
 
 ## Issue ticket number and link
-<!--I am an ivinisble comment line, do not delete me-->
+<!--I am an invisible comment line, do not delete me-->
 <!--add your issue # below like this: #4 -->
 
 ## Summary of app behaviour change
@@ -12,7 +12,7 @@
 ## Checklist before requesting a review
 - [ ] The title matches the regex `^(chore|feat|fix): #\d+ .+$`  
 or format `<chore|feat|fix>: #<issue number> <description>`
-eg1. feat: #0 awesome feature sub storie a  
+eg1. feat: #0 awesome feature sub story a  
 eg2. fix: #0 total disaster recovery  
 eg3. chore: #0 refactor method names
-- [ ] The App buils, runs and functions in local, if applicable
+- [ ] The App builds, runs and functions in local, if applicable
