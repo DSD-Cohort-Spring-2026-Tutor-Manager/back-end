@@ -11,8 +11,8 @@
 
 ## Checklist before requesting a review
 - [ ] The title matches the regex `^(chore|feat|fix): #\d+ .+$`  
-or format `<chore|feat|fix>: #<issue number> <description>`  
-eg1. feat: #4 awesome feature sub storie a  
-eg2. fix: #5 total disaster recovery  
-eg3. chore: #6 refactor method names
+or format `<chore|feat|fix>: #<issue number> <description>`
+eg1. feat: #0 awesome feature sub storie a  
+eg2. fix: #0 total disaster recovery  
+eg3. chore: #0 refactor method names
 - [ ] The App buils, runs and functions in local, if applicable
