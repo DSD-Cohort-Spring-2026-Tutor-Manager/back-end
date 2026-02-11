@@ -1,0 +1,16 @@
+name: "PR Title Check"
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  pr-title-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR Title Check
+        run: |
+          if [[ ! "${{ github.event.pull_request.title }}" =~ ^(chore|feat|fix): #\d+ .+$ ]]; then
+            echo "::error ::PR title must follow format: <chore|feat|fix>: #<issue number> <description>"
+            exit 1
+          fi
