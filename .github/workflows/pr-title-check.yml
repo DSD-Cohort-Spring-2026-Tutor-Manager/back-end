@@ -10,6 +10,11 @@ jobs:
     steps:
       - name: PR Title Check
         run: | 
-          if [[ ! "${{ github.event.pull_request.title }}" =~ ^(chore|feat|fix): #\d+ .+ ]]; then echo "::error ::PR title must follow format: <chore|feat|fix>: #<issue number> <description>"
+          title="${{ github.event.pull_request.title }}"
+          title="${title//$'\n'/ }"
+          # Require exactly: <chore|feat|fix>: #<digits> <description>
+          if [[ ! $title =~ ^(chore|feat|fix):\ #[0-9]+[[:space:]].+$ ]]; then
+            echo "::error ::PR title must follow format: <chore|feat|fix>: #<issue number> <description>"
+            echo "Actual: $title"
             exit 1
           fi
