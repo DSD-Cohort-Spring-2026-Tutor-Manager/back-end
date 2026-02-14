@@ -8,18 +8,13 @@
 		<version>4.0.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.tutorial</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>org.tutortoise.service</groupId>
+	<artifactId>tutortoise</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tutortoise</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
+
 	<scm>
 		<connection/>
 		<developerConnection/>
