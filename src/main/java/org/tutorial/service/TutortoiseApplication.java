@@ -1,4 +1,4 @@
-package org.tutorial.demo;
+package org.tutorial.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
