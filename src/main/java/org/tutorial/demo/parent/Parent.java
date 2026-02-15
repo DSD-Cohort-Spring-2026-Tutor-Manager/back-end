@@ -1,4 +1,4 @@
-package org.tutorial.demo.entity;
+package org.tutorial.demo.parent;
 
 
 import jakarta.persistence.Column;

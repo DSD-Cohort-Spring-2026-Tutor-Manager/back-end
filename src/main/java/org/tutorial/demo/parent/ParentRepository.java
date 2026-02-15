@@ -1,7 +1,6 @@
-package org.tutorial.demo.repository;
+package org.tutorial.demo.parent;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.tutorial.demo.entity.Parent;
 
 public interface ParentRepository extends JpaRepository<Parent, Integer> {
 }
