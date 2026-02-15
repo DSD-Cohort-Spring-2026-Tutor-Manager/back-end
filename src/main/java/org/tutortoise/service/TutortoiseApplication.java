@@ -1,4 +1,4 @@
-package org.tutorial.service;
+package org.tutortoise.service;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
