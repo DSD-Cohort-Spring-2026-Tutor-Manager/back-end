@@ -14,10 +14,14 @@ WORKDIR /app
 
 # Copy the JAR file into the container
 <<<<<<< HEAD
+<<<<<<< HEAD
 COPY target/demo*.jar app.jar
 =======
 COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
 >>>>>>> e23037b (chore: #2 Sync Integration Branch with Main (#18))
+=======
+COPY target/demo*.jar app.jar
+>>>>>>> 21d1890 (Corrected package structue, imports and corrected test cases)
 
 # Expose port 8080 to access the application
 EXPOSE 8080
