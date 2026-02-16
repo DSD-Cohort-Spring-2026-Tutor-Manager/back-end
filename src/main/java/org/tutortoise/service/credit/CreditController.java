@@ -41,21 +41,4 @@ public class CreditController {
         return ResponseEntity.ok(creditService.getHistory(parentId));
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity<String> addTransaction(
-//            @RequestParam int parentId,
-//            @RequestParam int credits,
-//            @RequestParam double amount,
-//            @RequestParam String type) {
-//        CreditTransaction transaction = new CreditTransaction();
-////        transaction.setParent(1,"name","last","email","phone", "password",10);
-//        transaction.setParent(new Parent(1,"name","last","email","phone", "password",10.0,new ArrayList<>()));
-//        transaction.setNumberOfCredits(credits);
-//        transaction.setTransactionTotal(amount);
-//        transaction.setType(TransactionType.valueOf(type));
-//        transaction.setDateTime(LocalDateTime.now());
-//        transactionRepository.save(transaction);
-//        return ResponseEntity.ok("Transcaction added");
-//
-//    }
 }
