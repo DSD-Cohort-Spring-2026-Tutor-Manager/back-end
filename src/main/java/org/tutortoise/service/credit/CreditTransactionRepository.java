@@ -1,4 +1,4 @@
-package org.tutortoise.service.Credit;
+package org.tutortoise.service.credit;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

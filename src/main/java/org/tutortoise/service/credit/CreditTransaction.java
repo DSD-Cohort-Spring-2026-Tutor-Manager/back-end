@@ -1,60 +1,66 @@
-package org.tutortoise.service.Credit;
+package org.tutortoise.service.credit;
 
 import jakarta.persistence.*;
 import org.tutortoise.service.parent.Parent;
+import org.tutortoise.service.session.Session;
+import org.tutortoise.service.tutor.Tutor;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="credit_transaction")
+@Table(name="credittransaction")
 public class CreditTransaction {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="transaction_id")
-    private int transactionId;
+    private Integer transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id_fk", nullable = false)
     private Parent parent;
 
-    @Column(name="tutor_id_fk")
-    private int tutorId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tutor_id", nullable = true)
+    private Tutor tutor;
 
-    @Column(name="session_id_fk")
-    private int sessionId;
 
-    @Column(name="dateTime", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "session_id_fk", nullable = true)
+    private Session session;
+
+    @Column(name="datetime_transaction", nullable = false)
     private LocalDateTime dateTime;
 
     @Column(name="number_of_credits")
     private Integer numberOfCredits;
 
-    @Column(name="transaction_total")
+    @Column(name="transaction_total_usd")
     private Double transactionTotal;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="type")
+    @Column(name="transaction_type")
     private TransactionType type;
 
     public CreditTransaction() {
     }
 
-    public CreditTransaction(int transactionId, Parent parent, int tutorId, int sessionId, LocalDateTime dateTime, Integer numberOfCredits, Double transactionTotal, TransactionType type) {
+    public CreditTransaction(Integer transactionId, Parent parent, Tutor tutor, Session session, LocalDateTime dateTime, Integer numberOfCredits, Double transactionTotal, TransactionType type) {
         this.transactionId = transactionId;
         this.parent = parent;
-        this.tutorId = tutorId;
-        this.sessionId = sessionId;
+        this.tutor = tutor;
+        this.session = session;
         this.dateTime = dateTime;
         this.numberOfCredits = numberOfCredits;
         this.transactionTotal = transactionTotal;
         this.type = type;
     }
 
-    public int getTransactionId() {
+    public Integer getTransactionId() {
         return transactionId;
     }
 
-    public void setTransactionId(int transactionId) {
+    public void setTransactionId(Integer transactionId) {
         this.transactionId = transactionId;
     }
 
@@ -66,20 +72,20 @@ public class CreditTransaction {
         this.parent = parent;
     }
 
-    public int getTutorId() {
-        return tutorId;
+    public Tutor getTutor() {
+        return tutor;
     }
 
-    public void setTutorId(int tutorId) {
-        this.tutorId = tutorId;
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
     }
 
-    public int getSessionId() {
-        return sessionId;
+    public Session getSession() {
+        return session;
     }
 
-    public void setSessionId(int sessionId) {
-        this.sessionId = sessionId;
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public LocalDateTime getDateTime() {
@@ -114,17 +120,5 @@ public class CreditTransaction {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
-        return "CreditTransaction{" +
-                "transactionId=" + transactionId +
-                ", parent=" + parent +
-                ", tutorId=" + tutorId +
-                ", sessionId=" + sessionId +
-                ", dateTime=" + dateTime +
-                ", numberOfCredits=" + numberOfCredits +
-                ", transactionTotal=" + transactionTotal +
-                ", type=" + type +
-                '}';
-    }
+
 }

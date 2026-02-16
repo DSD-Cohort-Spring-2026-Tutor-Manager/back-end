@@ -1,23 +1,20 @@
-package org.tutortoise.service.parent;
-
+package org.tutortoise.service.tutor;
 
 import jakarta.persistence.*;
 import org.tutortoise.service.credit.CreditTransaction;
 import org.tutortoise.service.session.Session;
-import org.tutortoise.service.student.Student;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Entity
-@Table(name="parent")
-public class Parent {
+@Table(name = "tutor")
+public class Tutor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="parent_id")
-    private Integer parentId;
+    @Column(name="tutor_id")
+    private Integer tutorId;
 
     @Column(name="first_name")
     private String firstName;
@@ -34,54 +31,37 @@ public class Parent {
     @Column(name="password_encrypted")
     private String passwordEncrypted;
 
-    @Column(name="current_credit_amount")
-    private double currentCreditAmount;
 
-    @OneToMany(mappedBy = "parent",
+    @OneToMany(mappedBy = "tutor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private List<CreditTransaction> transactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "tutor",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private List<Session> sessions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "parent",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<Student> students = new ArrayList<>();
-
-
-
-    @OneToMany(mappedBy = "parent",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true)
-    private List<CreditTransaction> transactions = new ArrayList<>();
-
-    public void addTransaction(CreditTransaction transaction)  {
-        transactions.add(transaction);
-        transaction.setParent(this);
+    public Tutor() {
     }
 
-
-    public Parent() {
-    }
-
-    public Parent(Integer parentId, String firstName, String lastName, String email, String phone, String passwordEncrypted, double currentCreditAmount, List<Session> sessions, List<Student> students, List<CreditTransaction> transactions) {
-        this.parentId = parentId;
+    public Tutor(Integer tutorId, String firstName, String lastName, String email, String phone, String passwordEncrypted, List<CreditTransaction> transactions, List<Session> sessions) {
+        this.tutorId = tutorId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.phone = phone;
         this.passwordEncrypted = passwordEncrypted;
-        this.currentCreditAmount = currentCreditAmount;
-        this.sessions = sessions;
-        this.students = students;
         this.transactions = transactions;
+        this.sessions = sessions;
     }
 
-    public Integer getParentId() {
-        return parentId;
+    public Integer getTutorId() {
+        return tutorId;
     }
 
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
+    public void setTutorId(Integer tutorId) {
+        this.tutorId = tutorId;
     }
 
     public String getFirstName() {
@@ -124,12 +104,12 @@ public class Parent {
         this.passwordEncrypted = passwordEncrypted;
     }
 
-    public double getCurrentCreditAmount() {
-        return currentCreditAmount;
+    public List<CreditTransaction> getTransactions() {
+        return transactions;
     }
 
-    public void setCurrentCreditAmount(double currentCreditAmount) {
-        this.currentCreditAmount = currentCreditAmount;
+    public void setTransactions(List<CreditTransaction> transactions) {
+        this.transactions = transactions;
     }
 
     public List<Session> getSessions() {
@@ -139,22 +119,4 @@ public class Parent {
     public void setSessions(List<Session> sessions) {
         this.sessions = sessions;
     }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
-
-    public List<CreditTransaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<CreditTransaction> transactions) {
-        this.transactions = transactions;
-    }
-
-
 }

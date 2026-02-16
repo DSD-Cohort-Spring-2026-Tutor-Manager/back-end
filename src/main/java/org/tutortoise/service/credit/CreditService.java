@@ -1,4 +1,4 @@
-package org.tutortoise.service.Credit;
+package org.tutortoise.service.credit;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class CreditService {
     CreditTransaction transaction = new CreditTransaction();
     transaction.setNumberOfCredits(credits);
     transaction.setTransactionTotal(amount);
-    transaction.setType(TransactionType.PURCHASE);
+    transaction.setType(TransactionType.purchase);
     transaction.setDateTime(LocalDateTime.now());
     parent.addTransaction(transaction);
     parentRepository.save(parent);
