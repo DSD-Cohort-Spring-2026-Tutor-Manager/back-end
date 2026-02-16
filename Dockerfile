@@ -1,13 +1,13 @@
-# Use OpenJDK 21 as the base image
-FROM eclipse-temurin:21-jdk-jammy
-
-# Set the working directory inside the container
+# Stage 1: Build
+FROM eclipse-temurin:21-jdk-jammy AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Copy the JAR file into the container
-COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose port 8080 to access the application
+# Stage 2: Run
+FROM eclipse-temurin:21-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
