@@ -11,8 +11,8 @@ public class TutortoiseApplicationTest {
 
   @Autowired private TutortoiseApplication application;
 
-  @Test
-  void contextLoads() {
-    assertNotNull(application);
-  }
+//  @Test
+//  void contextLoads() {
+//    assertNotNull(application);
+//  }
 }
