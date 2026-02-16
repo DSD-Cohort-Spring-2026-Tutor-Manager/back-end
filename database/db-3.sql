@@ -1,4 +1,4 @@
-insert into "Student"
+insert into Student
 (parent_id_fk, first_name, last_name, notes) values
 (1, 'John', 'Smith', 'This is a note about John Smith.'),
 (2, 'Jane', 'Doe', 'This is a note about Jane Doe.'),
@@ -11,7 +11,7 @@ insert into "Student"
 (3, 'Daniel', 'Anderson', 'This is a note about Daniel Anderson.'),
 (1, 'Laura', 'Thomas', 'This is a note about Laura Thomas.');
 
-insert into "Session"
+insert into Session
 (parent_id_fk, student_id_fk, tutor_id_fk, duration_hours, session_status, datetime_started, assessment_points_earned, assessment_points_goal, assessment_points_max)
 values
 (1, 1, 1, 2.0, 'upcoming', '2026-03-15 10:00:00', 55, 80, 100),
@@ -25,7 +25,7 @@ values
 (3, 9, 1 , 1 , 'upcoming' , '2026-04-22 14:00:00' , 80 , 95 , 100 ),
 (1 ,10 ,2 ,2.5 , 'upcoming' , '2026-04-24T09:30:00' ,90 ,90 ,100 );
 
-insert into "CreditTransaction"
+insert into CreditTransaction
 (session_id_fk, tutor_id_fk, parent_id_fk, datetime_transaction, number_of_credits, transaction_total_usd, transaction_type)
 values
 (1, 1, 1, '2026-03-15 10:00:00', 1, 100.00, 'redeem'),
