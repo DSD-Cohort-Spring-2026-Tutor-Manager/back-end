@@ -26,7 +26,7 @@ values
 (1 ,10 ,2 ,2.5 , 'upcoming' , '2026-04-24T09:30:00' ,90 ,90 ,100 );
 
 insert into CreditTransaction
-(session_id_fk, tutor_id_fk, parent_id_fk, datetime_transaction, number_of_credits, transaction_total_usd, transaction_type)
+(session_id_fk, tutor_id, parent_id_fk, datetime_transaction, number_of_credits, transaction_total_usd, transaction_type)
 values
 (1, 1, 1, '2026-03-15 10:00:00', 1, 100.00, 'redeem'),
 (2, 2, 2, '2026-03-16 14:00:00', 1, 75.00, 'redeem'),

@@ -64,13 +64,12 @@ CREATE TABLE Session (
 CREATE TABLE CreditTransaction (
     transaction_id SERIAL PRIMARY KEY,
     session_id_fk INTEGER,
-    tutor_id_fk INTEGER NOT NULL,
+    tutor_id_fk INTEGER,
     parent_id_fk INTEGER NOT NULL,
     datetime_transaction TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     number_of_credits DECIMAL(10, 2) NOT NULL,
     transaction_total_usd DECIMAL(10, 2) NOT NULL,
     transaction_type transaction_type NOT NULL,
     CONSTRAINT fk_transaction_session FOREIGN KEY (session_id_fk) REFERENCES Session(session_id),
-    CONSTRAINT fk_transaction_tutor FOREIGN KEY (tutor_id_fk) REFERENCES Tutor(tutor_id),
     CONSTRAINT fk_transaction_parent FOREIGN KEY (parent_id_fk) REFERENCES Parent(parent_id)
 );
