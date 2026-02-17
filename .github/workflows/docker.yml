@@ -4,9 +4,13 @@ on:
   push:
     branches: [main, integration]
     tags: ['v*']
+  pull_request:
+    branches: [ integration ]
+    types: [ closed ]
 
 jobs:
   build-and-push:
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     permissions:
