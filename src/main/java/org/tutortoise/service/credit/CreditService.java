@@ -55,7 +55,21 @@ public Double getBalance(int parentId){
                 getCurrentCreditAmount();
 }
 
-public List<CreditTransaction> getHistory(Integer parentId) {
-        return transactionRepository.findByParentParentId(parentId);
+
+public List<CreditHistoryDTO> getHistory(Integer parentId) {
+        List<CreditTransaction> transactions = transactionRepository.findByParentParentId(parentId);
+        return transactions.stream().map(this::convertToDTO).toList();
 }
+
+    private CreditHistoryDTO convertToDTO(CreditTransaction creditTransaction) {
+        return new CreditHistoryDTO
+                (creditTransaction.getTransactionId(),
+                creditTransaction.getParent().getParentId(),
+                creditTransaction.getTutor() != null ? creditTransaction.getTutor().getTutorId(): null,
+        creditTransaction.getSession() != null ? creditTransaction.getSession().getSessionId(): null,
+        creditTransaction.getNumberOfCredits(),
+        creditTransaction.getTransactionTotal(),
+        creditTransaction.getType().name(),
+        creditTransaction.getDateTime());
+    }
 }
