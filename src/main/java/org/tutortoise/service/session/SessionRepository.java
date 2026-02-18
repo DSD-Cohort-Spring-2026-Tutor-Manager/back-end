@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Integer> {
     List<Session> findByTutorTutorId(Integer tutorId);
-    List<Session> findByTutorTutorIdAndSessionStatusIn(Integer tutorId,SessionStatus  status);
+    List<Session> findByTutorTutorIdAndSessionStatus(Integer tutorId,SessionStatus  status);
 }

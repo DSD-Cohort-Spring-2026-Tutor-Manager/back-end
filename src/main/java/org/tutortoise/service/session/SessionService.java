@@ -36,7 +36,7 @@ public class SessionService {
             SessionStatus status
     ){
         List<Session> sessions = sessionRepository.
-                findByTutorTutorIdAndSessionStatusIn(tutorId,status);
+                findByTutorTutorIdAndSessionStatus(tutorId,status);
         return sessions.stream().map(this::convertToDTO).toList();
     }
 }
