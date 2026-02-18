@@ -1,5 +1,6 @@
 package org.tutortoise.service.credit;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tutortoise.service.parent.Parent;
@@ -23,12 +24,10 @@ public class CreditController {
 
 
     @PostMapping("/buy")
-    public ResponseEntity<String> buyCredits
-            (@RequestParam int parentId,
-             @RequestParam int credits,
-             @RequestParam double amount) {
-        creditService.buyCredits(parentId,credits, amount);
-        return ResponseEntity.ok("Credit purchased successfully");
+    public ResponseEntity<CreditResponseDTO> buyCredits
+            (@RequestBody CreditRequest creditRequest) {
+       CreditResponseDTO response =  creditService.buyCredits(creditRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/balance/{parentId}")
