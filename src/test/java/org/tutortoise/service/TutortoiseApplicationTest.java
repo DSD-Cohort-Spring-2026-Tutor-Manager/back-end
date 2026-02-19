@@ -1,16 +1,21 @@
 package org.tutortoise.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@SpringBootTest
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+@ExtendWith(MockitoExtension.class)
 public class TutortoiseApplicationTest {
 
-  @Autowired private TutortoiseApplication application;
+  @InjectMocks
+  private TutortoiseApplication application;
 
-//  @Test
-//  void contextLoads() {
-//    assertNotNull(application);
-//  }
+  @Test
+  void contextLoads() {
+    assertNotNull(application);
+  }
 }
