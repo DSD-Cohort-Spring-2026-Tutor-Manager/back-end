@@ -19,29 +19,56 @@ public class CreditService {
     }
 
     @Transactional
-    public void buyCredits(int parentId, int credits, double amount) {
+    public CreditResponseDTO buyCredits(CreditRequest creditRequest) {
 
         Parent parent = parentRepository.
-                findById(parentId).orElseThrow(() -> new RuntimeException("Parent not found"));
-        parent.setCurrentCreditAmount(parent.getCurrentCreditAmount()+ credits);
+                findById(creditRequest.getParentId()).orElseThrow(() -> new RuntimeException("Parent not found"));
+        double updatedCredit = parent.getCurrentCreditAmount()+ creditRequest.getCredits();
+        parent.setCurrentCreditAmount(updatedCredit);
 
 
-    CreditTransaction transaction = new CreditTransaction();
-    transaction.setNumberOfCredits(credits);
-    transaction.setTransactionTotal(amount);
-    transaction.setType(TransactionType.purchase);
-    transaction.setDateTime(LocalDateTime.now());
-    parent.addTransaction(transaction);
-    parentRepository.save(parent);
-}
+        CreditTransaction transaction = new CreditTransaction();
+        transaction.setNumberOfCredits(creditRequest.getCredits());
+        transaction.setTransactionTotal(creditRequest.getAmount());
+        transaction.setParent(parent);
+        transaction.setType(TransactionType.purchase);
+        transaction.setDateTime(LocalDateTime.now());
 
-public Double getBalance(int parentId){
+        parentRepository.save(parent);
+        parent.addTransaction(transaction);
+        transactionRepository.save(transaction);
+        return new CreditResponseDTO(
+                parent.getParentId(),
+                creditRequest.getCredits(),
+                creditRequest.getAmount(),
+                updatedCredit,LocalDateTime.now()
+
+        );
+
+
+    }
+
+    public Double getBalance(int parentId){
         return parentRepository.findById(parentId)
                 .orElseThrow(()-> new RuntimeException("Parent not found")).
                 getCurrentCreditAmount();
-}
+    }
 
-public List<CreditTransaction> getHistory(Integer parentId) {
-        return transactionRepository.findByParentParentId(parentId);
-}
+
+    public List<CreditHistoryDTO> getHistory(Integer parentId) {
+        List<CreditTransaction> transactions = transactionRepository.findByParentParentId(parentId);
+        return transactions.stream().map(this::convertToDTO).toList();
+    }
+
+    private CreditHistoryDTO convertToDTO(CreditTransaction creditTransaction) {
+        return new CreditHistoryDTO
+                (creditTransaction.getTransactionId(),
+                        creditTransaction.getParent().getParentId(),
+                        creditTransaction.getTutor() != null ? creditTransaction.getTutor().getTutorId(): null,
+                        creditTransaction.getSession() != null ? creditTransaction.getSession().getSessionId(): null,
+                        creditTransaction.getNumberOfCredits(),
+                        creditTransaction.getTransactionTotal(),
+                        creditTransaction.getType().name(),
+                        creditTransaction.getDateTime());
+    }
 }

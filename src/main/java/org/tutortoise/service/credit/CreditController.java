@@ -1,9 +1,6 @@
 package org.tutortoise.service.credit;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import java.util.List;
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +24,10 @@ public class CreditController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping("/buy")
-    public ResponseEntity<String> buyCredits
-            (@RequestParam int parentId,
-             @RequestParam int credits,
-             @RequestParam double amount) {
-        creditService.buyCredits(parentId,credits, amount);
-        return ResponseEntity.ok("Credit purchased successfully");
+    public ResponseEntity<CreditResponseDTO> buyCredits
+            (@RequestBody CreditRequest creditRequest) {
+        CreditResponseDTO response =  creditService.buyCredits(creditRequest);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Parents can check their current remaining credit balance", description = "Parents cannot schedule sessions if they do not have enough credits")
@@ -51,8 +46,9 @@ public class CreditController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @GetMapping("/history/{parentId}")
-    public ResponseEntity<List<CreditTransaction>> getHistory(@PathVariable int parentId){
+    public ResponseEntity<List<CreditHistoryDTO>> getHistory(@PathVariable int parentId){
         return ResponseEntity.ok(creditService.getHistory(parentId));
     }
-    
+
+
 }
