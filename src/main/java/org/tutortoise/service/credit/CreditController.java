@@ -1,5 +1,6 @@
 package org.tutortoise.service.credit;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.tutortoise.service.parent.Parent;
@@ -23,12 +24,10 @@ public class CreditController {
 
 
     @PostMapping("/buy")
-    public ResponseEntity<String> buyCredits
-            (@RequestParam int parentId,
-             @RequestParam int credits,
-             @RequestParam double amount) {
-        creditService.buyCredits(parentId,credits, amount);
-        return ResponseEntity.ok("Credit purchased successfully");
+    public ResponseEntity<CreditResponseDTO> buyCredits
+            (@RequestBody CreditRequest creditRequest) {
+       CreditResponseDTO response =  creditService.buyCredits(creditRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/balance/{parentId}")
@@ -37,25 +36,9 @@ public class CreditController {
     }
 
     @GetMapping("/history/{parentId}")
-    public ResponseEntity<List<CreditTransaction>> getHistory(@PathVariable int parentId){
+    public ResponseEntity<List<CreditHistoryDTO>> getHistory(@PathVariable int parentId){
         return ResponseEntity.ok(creditService.getHistory(parentId));
     }
 
-//    @PostMapping("/add")
-//    public ResponseEntity<String> addTransaction(
-//            @RequestParam int parentId,
-//            @RequestParam int credits,
-//            @RequestParam double amount,
-//            @RequestParam String type) {
-//        CreditTransaction transaction = new CreditTransaction();
-////        transaction.setParent(1,"name","last","email","phone", "password",10);
-//        transaction.setParent(new Parent(1,"name","last","email","phone", "password",10.0,new ArrayList<>()));
-//        transaction.setNumberOfCredits(credits);
-//        transaction.setTransactionTotal(amount);
-//        transaction.setType(TransactionType.valueOf(type));
-//        transaction.setDateTime(LocalDateTime.now());
-//        transactionRepository.save(transaction);
-//        return ResponseEntity.ok("Transcaction added");
-//
-//    }
+
 }

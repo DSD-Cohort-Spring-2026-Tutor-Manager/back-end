@@ -13,7 +13,30 @@ public class SessionService {
         this.sessionRepository = sessionRepository;
     }
 
-    public List<Session> getTutorSessions(Integer tutorId){
-        return sessionRepository.findByTutorTutorId(tutorId);
+    public List<SessionDTO> getAllSessions(Integer tutorId){
+        List <Session> sessions = sessionRepository.findByTutorTutorId(tutorId);
+        return sessions.stream().map(this::convertToDTO).toList();
+    }
+
+    private SessionDTO convertToDTO(Session session) {
+        return new SessionDTO(session.getSessionId(),
+                session.getParent().getParentId(),
+                session.getStudent().getStudentId(),
+                session.getTutor().getTutorId(),
+                session.getSessionStatus().name(),
+                session.getDurationsHours(),
+                session.getDatetimeStarted(),
+                session.getAssessmentPointsEarned(),
+                session.getAssessmentPointsGoal(),
+                session.getAssessmentPointsMax());
+    }
+
+    public List<SessionDTO> getSessionsByStatus(
+            Integer tutorId,
+            SessionStatus status
+    ){
+        List<Session> sessions = sessionRepository.
+                findByTutorTutorIdAndSessionStatus(tutorId,status);
+        return sessions.stream().map(this::convertToDTO).toList();
     }
 }
