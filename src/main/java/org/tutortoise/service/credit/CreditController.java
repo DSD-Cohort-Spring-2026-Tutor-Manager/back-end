@@ -1,5 +1,8 @@
 package org.tutortoise.service.credit;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,11 @@ public class CreditController {
     }
 
 
+    @Operation(summary = "Parents buy credit", description = "1 credit = 1 hour of tutoring")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful operation"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @PostMapping("/buy")
     public ResponseEntity<String> buyCredits
             (@RequestParam int parentId,
@@ -27,31 +35,24 @@ public class CreditController {
         return ResponseEntity.ok("Credit purchased successfully");
     }
 
+    @Operation(summary = "Parents can check their current remaining credit balance", description = "Parents cannot schedule sessions if they do not have enough credits")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Show remaining credit balance"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/balance/{parentId}")
     public ResponseEntity<Double> getBalance(@PathVariable int parentId){
         return ResponseEntity.ok(creditService.getBalance(parentId));
     }
 
+    @Operation(summary = "Parents transaction history", description = "Parents can check their transaction history to see when they bought credits and how many credits they have used for sessions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Show successful transaction history"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
     @GetMapping("/history/{parentId}")
     public ResponseEntity<List<CreditTransaction>> getHistory(@PathVariable int parentId){
         return ResponseEntity.ok(creditService.getHistory(parentId));
     }
-
-//    @PostMapping("/add")
-//    public ResponseEntity<String> addTransaction(
-//            @RequestParam int parentId,
-//            @RequestParam int credits,
-//            @RequestParam double amount,
-//            @RequestParam String type) {
-//        CreditTransaction transaction = new CreditTransaction();
-////        transaction.setParent(1,"name","last","email","phone", "password",10);
-//        transaction.setParent(new Parent(1,"name","last","email","phone", "password",10.0,new ArrayList<>()));
-//        transaction.setNumberOfCredits(credits);
-//        transaction.setTransactionTotal(amount);
-//        transaction.setType(TransactionType.valueOf(type));
-//        transaction.setDateTime(LocalDateTime.now());
-//        transactionRepository.save(transaction);
-//        return ResponseEntity.ok("Transcaction added");
-//
-//    }
+    
 }
