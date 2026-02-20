@@ -18,4 +18,13 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<HttpRestResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        HttpRestResponse response = new HttpRestResponse();
+        response.setStatus(HttpStatus.BAD_REQUEST);
+        response.setMessage(ex.getMessage());
+        response.setOperationStatus("failed");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 }

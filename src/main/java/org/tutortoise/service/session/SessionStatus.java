@@ -12,4 +12,13 @@ public enum SessionStatus {
         this.value = value;
     }
 
+    public static SessionStatus session(String value){
+        for(SessionStatus sessionStatus : SessionStatus.values()){
+            if(sessionStatus.value.equalsIgnoreCase(value)){
+                return sessionStatus;
+            }
+        }
+        throw new IllegalArgumentException("Invalid session status: " + value+". Valid values are: scheduled, completed, cancelled, all.");
+    }
+
 }

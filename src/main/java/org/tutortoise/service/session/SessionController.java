@@ -26,8 +26,8 @@ public class SessionController {
             @ApiResponse(responseCode = "200", description = "Successful session retrieval"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @GetMapping("")
-    public ResponseEntity<List<SessionDTO>> getAllSessions() {
+    @GetMapping(value = "", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<SessionDTO>> getAllSessions() {
         return ResponseEntity.ok(sessionService.getSessions(null, null));
     }
 
@@ -39,8 +39,8 @@ public class SessionController {
             @ApiResponse(responseCode = "200", description = "Successful session retrieval"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @GetMapping("/tutor/{tutorId}")
-    public ResponseEntity<List<SessionDTO>> getSessions(
+    @GetMapping(path = "/tutor/{tutorId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<SessionDTO>> getSessions(
             @PathVariable @NotBlank @Positive(message = "tutorId needs to be a positive integer only") String tutorId,
             @RequestParam String status) {
         if( StringUtils.isBlank(tutorId) ){

@@ -35,6 +35,13 @@ public class Student {
     public Student() {
     }
 
+    public Student(Parent parent, String firstName, String lastName)
+    {
+        this.parent = parent;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public Student(Integer studentId, Parent parent, String firstName, String lastName, String notes, List<Session> sessions) {
         this.studentId = studentId;
         this.parent = parent;
