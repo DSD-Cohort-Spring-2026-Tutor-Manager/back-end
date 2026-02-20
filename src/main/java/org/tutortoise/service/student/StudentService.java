@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.parent.ParentRepository;
+import org.tutortoise.service.session.Session;
+
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -34,7 +37,15 @@ public class StudentService {
             student.getFirstName(),
             student.getLastName(),
             student.getNotes(),
-            student.getSessions()
+            student.getSessions().stream()
+                    .map(Session::getSessionId)
+                    .toList()
     );
+  }
+
+  public List<StudentDTO> getStudentsForParent(Integer parentId) {
+    return studentRepository.findByParentId(parentId).stream()
+            .map(this :: convertToDTO)
+            .toList();
   }
 }
