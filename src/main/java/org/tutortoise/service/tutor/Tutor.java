@@ -1,11 +1,10 @@
 package org.tutortoise.service.tutor;
 
 import jakarta.persistence.*;
-import org.tutortoise.service.credit.CreditTransaction;
-import org.tutortoise.service.session.Session;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.tutortoise.service.credit.CreditTransaction;
+import org.tutortoise.service.session.Session;
 
 @Entity
 @Table(name = "tutor")
