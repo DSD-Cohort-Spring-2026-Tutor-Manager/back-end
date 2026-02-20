@@ -1,9 +1,5 @@
 package org.tutortoise.service.student;
 
-import jakarta.persistence.*;
-import org.tutortoise.service.parent.Parent;
-import org.tutortoise.service.session.Session;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,18 +10,18 @@ public class StudentDTO {
   private String firstName;
   private String lastName;
   private String notes;
-  private List<Session> sessions = new ArrayList<>();
+  private List<Integer> sessionIds = new ArrayList<>();
 
   public StudentDTO() {
   }
 
-  public StudentDTO(Integer studentId, Integer parentId, String firstName, String lastName, String notes, List<Session> sessions) {
+  public StudentDTO(Integer studentId, Integer parentId, String firstName, String lastName, String notes, List<Integer> sessionIds) {
     this.studentId = studentId;
     this.parentId = parentId;
     this.firstName = firstName;
     this.lastName = lastName;
     this.notes = notes;
-    this.sessions = sessions;
+    this.sessionIds = sessionIds;
   }
 
   public Integer getStudentId() {
@@ -68,12 +64,12 @@ public class StudentDTO {
     this.notes = notes;
   }
 
-  public List<Session> getSessions() {
-    return sessions;
+  public List<Integer> getSessions() {
+    return sessionIds;
   }
 
-  public void setSessions(List<Session> sessions) {
-    this.sessions = sessions;
+  public void setSessions(List<Integer> sessionIds) {
+    this.sessionIds = sessionIds;
   }
 }
 
