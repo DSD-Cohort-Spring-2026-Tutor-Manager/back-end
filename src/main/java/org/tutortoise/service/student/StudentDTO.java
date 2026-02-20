@@ -1,7 +1,5 @@
 package org.tutortoise.service.student;
 
-import jakarta.persistence.*;
-import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.session.Session;
 
 import java.util.ArrayList;
