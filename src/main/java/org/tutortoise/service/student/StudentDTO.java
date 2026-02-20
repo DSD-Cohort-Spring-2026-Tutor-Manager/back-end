@@ -19,13 +19,6 @@ public class StudentDTO {
   public StudentDTO() {
   }
 
-  public StudentDTO(Integer parentId, String firstName, String lastName)
-  {
-    this.parentId = parentId;
-    this.firstName = firstName;
-    this.lastName = lastName;
-  }
-
   public StudentDTO(Integer studentId, Integer parentId, String firstName, String lastName, String notes, List<Session> sessions) {
     this.studentId = studentId;
     this.parentId = parentId;

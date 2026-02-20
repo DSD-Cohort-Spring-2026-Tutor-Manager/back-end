@@ -17,12 +17,14 @@ public class StudentService {
     this.parentRepository = parentRepository;
   }
 
-  public void addStudent(Integer parentId, String firstName, String lastName) {
-    Parent parent = parentRepository.findById(parentId).orElseThrow(() ->
-            new RuntimeException("Parent not found"));
+  public StudentDTO addStudent(Integer parentId, String firstName, String lastName) {
+
+    // Get Parent by parentId
+    Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Parent not found"));
 
     Student student = new Student(parent, firstName, lastName);
-    studentRepository.save(student);
+    Student saved = studentRepository.save(student);
+    return convertToDTO(saved);
   }
 
   public StudentDTO convertToDTO(Student student) {
