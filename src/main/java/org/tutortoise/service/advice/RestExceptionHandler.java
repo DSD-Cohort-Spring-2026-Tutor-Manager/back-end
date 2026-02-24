@@ -9,22 +9,32 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @RestControllerAdvice
 public class RestExceptionHandler {
 
-    @ExceptionHandler(HandlerMethodValidationException.class)
-    public ResponseEntity<HttpRestResponse> handleValidationExceptions(HandlerMethodValidationException ex) {
-        HttpRestResponse response = new HttpRestResponse();
-        response.setStatus(HttpStatus.BAD_REQUEST);
-        response.setMessage(ex.getAllErrors().getFirst().getDefaultMessage());
-        response.setOperationStatus("failed");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+  @ExceptionHandler(HandlerMethodValidationException.class)
+  public ResponseEntity<HttpRestResponse> handleValidationExceptions(
+      HandlerMethodValidationException ex) {
+    HttpRestResponse response = new HttpRestResponse();
+    response.setStatus(HttpStatus.BAD_REQUEST);
+    response.setMessage(ex.getAllErrors().getFirst().getDefaultMessage());
+    response.setOperationStatus(HttpRestResponse.FAILED);
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<HttpRestResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
-        HttpRestResponse response = new HttpRestResponse();
-        response.setStatus(HttpStatus.BAD_REQUEST);
-        response.setMessage(ex.getMessage());
-        response.setOperationStatus("failed");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<HttpRestResponse> handleIllegalArgumentException(
+      IllegalArgumentException ex) {
+    HttpRestResponse response = new HttpRestResponse();
+    response.setStatus(HttpStatus.BAD_REQUEST);
+    response.setMessage(ex.getMessage());
+    response.setOperationStatus(HttpRestResponse.FAILED);
+    return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
 
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<HttpRestResponse> handleRuntimeException(RuntimeException ex) {
+    HttpRestResponse response = new HttpRestResponse();
+    response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+    response.setMessage(ex.getMessage());
+    response.setOperationStatus(HttpRestResponse.FAILED);
+    return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
 }

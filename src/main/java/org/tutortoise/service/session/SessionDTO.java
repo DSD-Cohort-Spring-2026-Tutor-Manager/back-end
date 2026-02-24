@@ -1,48 +1,42 @@
 package org.tutortoise.service.session;
 
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
 public class SessionDTO {
 
-    private Integer sessionId;
-    private Integer parentId;
-    private Integer studentId;
-    private Integer tutorId;
-    private Double durationsHours;
-    private String sessionStatus;
-    private LocalDateTime datetimeStarted;
-    private Double assessmentPointsEarned;
-    private Double assessmentPointsGoal;
-    private Double assessmentPointsMax;
+  private Integer sessionId;
+  private Integer parentId;
+  private Integer studentId;
+  private Integer tutorId;
+  private String tutorName;
+  private Double durationsHours;
+  private String sessionStatus;
+  private LocalDateTime datetimeStarted;
+  private Double assessmentPointsEarned;
+  private Double assessmentPointsGoal;
+  private Double assessmentPointsMax;
 
+  @Builder
+  public SessionDTO() {}
 
-    public SessionDTO(Integer sessionId, Integer parentId, Integer studentId, Integer tutorId, String sessionStatus, Double durationsHours, LocalDateTime datetimeStarted, Double assessmentPointsEarned, Double assessmentPointsGoal, Double assessmentPointsMax) {
-        this.sessionId = sessionId;
-        this.parentId = parentId;
-        this.studentId = studentId;
-        this.tutorId = tutorId;
-        this.sessionStatus = sessionStatus;
-        this.durationsHours = durationsHours;
-        this.datetimeStarted = datetimeStarted;
-        this.assessmentPointsEarned = assessmentPointsEarned;
-        this.assessmentPointsGoal = assessmentPointsGoal;
-        this.assessmentPointsMax = assessmentPointsMax;
-    }
+  public static SessionDTO convertToDTO(Session session) {
 
-    public static SessionDTO convertToDTO(Session session) {
-        return new SessionDTO(session.getSessionId(),
-                session.getParent().getParentId(),
-                session.getStudent().getStudentId(),
-                session.getTutor().getTutorId(),
-                session.getSessionStatus().name(),
-                session.getDurationsHours(),
-                session.getDatetimeStarted(),
-                session.getAssessmentPointsEarned(),
-                session.getAssessmentPointsGoal(),
-                session.getAssessmentPointsMax());
-    }
+    return new SessionDTO(
+        session.getSessionId(),
+        session.getParent().getParentId(),
+        session.getStudent().getStudentId(),
+        session.getTutor().getTutorId(),
+        session.getTutor().getFirstName() + " " + session.getTutor().getLastName(),
+        session.getDurationsHours(),
+        session.getSessionStatus().name(),
+        session.getDatetimeStarted(),
+        session.getAssessmentPointsEarned(),
+        session.getAssessmentPointsGoal(),
+        session.getAssessmentPointsMax());
+  }
 }
