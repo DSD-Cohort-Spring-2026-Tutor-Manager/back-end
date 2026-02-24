@@ -19,7 +19,7 @@ public class ParentDTO extends HttpRestResponse {
     private String parentName;
     private String parentEmail;
     private Integer sessionCount;
+    private double creditBalance;
     private List<StudentDTO> students = new ArrayList<>();
-
 
 }

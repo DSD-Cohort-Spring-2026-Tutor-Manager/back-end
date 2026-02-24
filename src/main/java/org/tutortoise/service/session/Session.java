@@ -18,7 +18,7 @@ import org.tutortoise.service.tutor.Tutor;
         "WITH StudentDateTime AS ("
             + "       SELECT "
             + "        *, ROW_NUMBER() OVER ( "
-            + "            PARTITION BY session.parent_id_fk, session.student_id_fk "
+            + "            PARTITION BY session.parent_id_fk, session.student_id_fk, session.subject_id_fk "
             + "            ORDER BY session.datetime_started DESC "
             + "            ) as rowNum "
             + "    FROM "
@@ -99,6 +99,6 @@ public class Session {
   @JoinColumn(name = "subject_id_fk", nullable = false)
   private Subject subject;
 
-  @OneToMany(mappedBy = "session")
+  @OneToMany(mappedBy = "session", fetch =  FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
   private List<CreditTransaction> transactions = new ArrayList<>();
 }

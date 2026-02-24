@@ -20,23 +20,23 @@ public class SessionDTO {
   private Double assessmentPointsEarned;
   private Double assessmentPointsGoal;
   private Double assessmentPointsMax;
-
+    
   @Builder
   public SessionDTO() {}
 
-  public static SessionDTO convertToDTO(Session session) {
+    public static SessionDTO convertToDTO(Session session) {
 
-    return new SessionDTO(
-        session.getSessionId(),
-        session.getParent().getParentId(),
-        session.getStudent().getStudentId(),
-        session.getTutor().getTutorId(),
-        session.getTutor().getFirstName() + " " + session.getTutor().getLastName(),
-        session.getDurationsHours(),
-        session.getSessionStatus().name(),
-        session.getDatetimeStarted(),
-        session.getAssessmentPointsEarned(),
-        session.getAssessmentPointsGoal(),
-        session.getAssessmentPointsMax());
-  }
+        return new SessionDTO(
+                session.getSessionId(),
+                session.getParent().getParentId(),
+                session.getStudent().getStudentId(),
+                session.getTutor().getTutorId(),
+                session.getTutor().getFirstName() + " " + session.getTutor().getLastName(),
+                session.getDurationsHours(),
+                session.getSessionStatus().name(),
+                session.getDatetimeStarted(),
+                session.getAssessmentPointsEarned(),
+                session.getAssessmentPointsGoal(),
+                session.getAssessmentPointsMax());
+    }
 }

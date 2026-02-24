@@ -65,7 +65,7 @@ public class CreditService {
                 (creditTransaction.getTransactionId(),
                         creditTransaction.getParent().getParentId(),
                         creditTransaction.getTutor() != null ? creditTransaction.getTutor().getTutorId(): null,
-                        creditTransaction.getSession().getSessionId(),
+                        creditTransaction.getSession()!= null ? creditTransaction.getSession().getSessionId(): null,
                         creditTransaction.getNumberOfCredits(),
                         creditTransaction.getTransactionTotal(),
                         creditTransaction.getType().name(),

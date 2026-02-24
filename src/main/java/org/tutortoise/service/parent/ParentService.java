@@ -13,12 +13,14 @@ import org.tutortoise.service.session.SessionService;
 import org.tutortoise.service.session.SessionStatus;
 import org.tutortoise.service.session.SessionStudentData;
 import org.tutortoise.service.student.StudentDTO;
+import org.tutortoise.service.student.StudentService;
 
 @Service
 @RequiredArgsConstructor
 public class ParentService {
 
   private final SessionService sessionService;
+  private final ParentRepository parentRepository;
 
   public ParentDTO getParentInfo(
       @Positive(message = "Parent id must be positive integer") Integer parentId) {
@@ -26,6 +28,19 @@ public class ParentService {
     ParentDTO parentDTO = new ParentDTO();
     parentDTO.setStatus(HttpStatus.OK);
     parentDTO.setOperationStatus(HttpRestResponse.SUCCESS);
+
+    Optional<Parent> optionalParent = parentRepository.findById(parentId);
+
+    if(optionalParent.isEmpty()) {
+        parentDTO.setStatus(HttpStatus.NOT_FOUND);
+        parentDTO.setMessage(String.format("Parent with id : %s not found", parentId));
+        parentDTO.setOperationStatus(HttpRestResponse.FAILED);
+        return parentDTO;
+    }
+
+    parentDTO.setCreditBalance(optionalParent.map(Parent::getCurrentCreditAmount).orElse(0.0));
+    parentDTO.setParentName(optionalParent.map(parent -> parent.getFirstName() + " " + parent.getLastName()).orElse("N/A"));
+    parentDTO.setParentEmail(optionalParent.map(Parent::getEmail).orElse("N/A"));
 
     List<SessionStudentData> sessionStudentDataList =
         sessionService.findStudentInfoByParent(parentId);
@@ -56,7 +71,7 @@ public class ParentService {
                           .build();
                   studentDTO.setLatestScore(studentDTO.getPreviousScore());
                 } else {
-                  studentDTO.setLatestScore(
+                  studentDTO.setPreviousScore(
                       calculateScore(
                           sessionDTO.assessmentPointsEarned(), sessionDTO.assessmentPointsMax()));
                 }

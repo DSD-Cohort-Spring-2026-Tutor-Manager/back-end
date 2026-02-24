@@ -10,11 +10,11 @@ import org.springframework.util.CollectionUtils;
 @Service
 public class SessionService {
 
-  private final SessionRepository sessionRepository;
+    private final SessionRepository sessionRepository;
 
-  public SessionService(SessionRepository sessionRepository) {
-    this.sessionRepository = sessionRepository;
-  }
+    public SessionService(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
+    }
 
   public List<SessionDTO> getSessions(String tutorId, String status) {
     List<Session> sessions;
