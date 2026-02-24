@@ -23,7 +23,6 @@ public class CreditTransaction {
     @JoinColumn(name = "tutor_id", nullable = true)
     private Tutor tutor;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "session_id_fk", nullable = true)
     private Session session;

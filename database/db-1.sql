@@ -1,5 +1,5 @@
 -- Create ENUM types for status and transaction type
-CREATE TYPE session_status AS ENUM ('upcoming', 'in-progress', 'cancelled', 'completed');
+CREATE TYPE session_status AS ENUM ('scheduled', 'in-progress', 'cancelled', 'completed');
 CREATE TYPE transaction_type AS ENUM ('purchase', 'redeem');
 
 -- Create Admin table first (no dependencies)

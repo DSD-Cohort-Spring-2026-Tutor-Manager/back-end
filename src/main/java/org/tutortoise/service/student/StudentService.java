@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.parent.ParentRepository;
+import org.tutortoise.service.session.SessionDTO;
 
 @Service
 public class StudentService {
@@ -19,8 +20,10 @@ public class StudentService {
 
   public StudentDTO addStudent(Integer parentId, String firstName, String lastName) {
 
-    // Get Parent by parentId
-    Parent parent = parentRepository.findById(parentId).orElseThrow(() -> new RuntimeException("Parent not found"));
+    Parent parent =
+        parentRepository
+            .findById(parentId)
+            .orElseThrow(() -> new RuntimeException("Parent not found"));
 
     Student student = new Student(parent, firstName, lastName);
     Student saved = studentRepository.save(student);
@@ -28,13 +31,12 @@ public class StudentService {
   }
 
   public StudentDTO convertToDTO(Student student) {
-    return new StudentDTO(
-            student.getStudentId(),
-            student.getParent().getParentId(),
-            student.getFirstName(),
-            student.getLastName(),
-            student.getNotes(),
-            student.getSessions()
-    );
+    return StudentDTO.builder()
+        .studentId(student.getStudentId())
+        .parentId(student.getParent().getParentId())
+        .studentName(student.getFirstName() + " " + student.getLastName())
+        .notes(student.getNotes())
+        .sessions(student.getSessions().stream().map(SessionDTO::convertToDTO).toList())
+        .build();
   }
 }
