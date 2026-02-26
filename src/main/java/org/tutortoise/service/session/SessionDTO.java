@@ -13,6 +13,10 @@ public class SessionDTO {
   private Integer sessionId;
   private Integer parentId;
   private Integer studentId;
+  private String studentFirstName;
+  private String studentLastName;
+  private String notes;
+  private String subject;
   private Integer tutorId;
   private String tutorName;
   private Double durationsHours;
@@ -21,23 +25,27 @@ public class SessionDTO {
   private Double assessmentPointsEarned;
   private Double assessmentPointsGoal;
   private Double assessmentPointsMax;
-    
+
   @Builder
   public SessionDTO() {}
 
-    public static SessionDTO convertToDTO(Session session) {
+  public static SessionDTO convertToDTO(Session session) {
 
-        return new SessionDTO(
-                session.getSessionId(),
-                session.getParent().getParentId(),
-                session.getStudent().getStudentId(),
-                session.getTutor().getTutorId(),
-                session.getTutor().getFirstName() + " " + session.getTutor().getLastName(),
-                session.getDurationsHours(),
-                session.getSessionStatus().name(),
-                session.getDatetimeStarted(),
-                session.getAssessmentPointsEarned(),
-                session.getAssessmentPointsGoal(),
-                session.getAssessmentPointsMax());
-    }
+    return new SessionDTO(
+            session.getSessionId(),
+            session.getParent().getParentId(),
+            session.getStudent().getStudentId(),
+            session.getStudent().getFirstName(),
+            session.getStudent().getLastName(),
+            session.getStudent().getNotes(),
+            session.getSubject().getSubject(),
+            session.getTutor().getTutorId(),
+            session.getTutor().getFirstName() + " " + session.getTutor().getLastName(),
+            session.getDurationsHours(),
+            session.getSessionStatus().name(),
+            session.getDatetimeStarted(),
+            session.getAssessmentPointsEarned(),
+            session.getAssessmentPointsGoal(),
+            session.getAssessmentPointsMax());
+  }
 }
