@@ -30,7 +30,31 @@ public class ParentController {
   @GetMapping(value = "/{parentId}", produces = "application/json")
   public @ResponseBody ResponseEntity<ParentDTO> getParentSessionInfo(
       @PathVariable @Positive(message = "Parent id must be positive integer") Integer parentId) {
-    ParentDTO parentDTO = parentService.getParentInfo(parentId);
+    ParentDTO parentDTO = parentService.getStudentDetailsByParent(parentId);
     return ResponseEntity.ok(parentDTO);
   }
+
+  @Operation(
+          summary = "Retrieves student sessions with progress",
+          description =
+                  "This API retrieves the session information for a specific parent, including the "
+                          + "sessions of their students and the progress of each student in their subjects."
+                          + "The response includes the parent details, a list of their students, and for each "
+                          + "student, a list of their sessions and their progress in each subject.")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(responseCode = "200", description = "Successful information retrieval"),
+                  @ApiResponse(responseCode = "500", description = "Internal server error")
+          })
+  @GetMapping(value = "/{parentId}/students", produces = "application/json")
+  public @ResponseBody ResponseEntity<ParentDTO> getParentSessionInfo(
+          @PathVariable @Positive(message = "Parent id must be positive integer") Integer parentId,
+          @RequestParam(value = "studentId", required = false) Integer studentId,
+          @RequestParam(value = "subject", required = false) Integer subjectId)
+  {
+
+    ParentDTO parentDTO = parentService.getStudentProgressBySubject(parentId, studentId, subjectId);
+    return ResponseEntity.ok(parentDTO);
+  }
+
 }

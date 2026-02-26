@@ -1,10 +1,6 @@
 package org.tutortoise.service.session;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 import org.tutortoise.service.credit.CreditTransaction;
 import org.tutortoise.service.parent.Parent;
@@ -12,52 +8,56 @@ import org.tutortoise.service.student.Student;
 import org.tutortoise.service.subject.Subject;
 import org.tutortoise.service.tutor.Tutor;
 
-@NamedNativeQuery(
-    name = "findStudentInfoByParent",
-    query =
-        "WITH StudentDateTime AS ("
-            + "       SELECT "
-            + "        *, ROW_NUMBER() OVER ( "
-            + "            PARTITION BY session.parent_id_fk, session.student_id_fk, session.subject_id_fk "
-            + "            ORDER BY session.datetime_started DESC "
-            + "            ) as rowNum "
-            + "    FROM "
-            + "        session "
-            + "    WHERE session.session_status = 'completed' AND session.parent_id_fk = :parentId "
-            + ")"
-            + "SELECT "
-            + "stu.first_name as firstName,"
-            + "stu.last_name as lastName,"
-            + "sdt.student_id_fk as studentId, "
-            + "sdt.rowNum as rowNum, "
-            + "sum(sdt.assessment_points_earned) as assessmentPointsEarned, "
-            + "sum(sdt.assessment_points_max) as assessmentPointsMax"
-            + " FROM "
-            + "    StudentDateTime sdt, "
-            + "    student stu "
-            + "WHERE "
-            + "    rowNum <= 2 "
-            + "AND sdt.student_id_fk = stu.student_id "
-            + "GROUP BY stu.first_name, stu.last_name, sdt.student_id_fk, sdt.rowNum "
-            + "order by sdt.rowNum, sdt.student_id_fk",
-    resultSetMapping = "SessionStudentDataMapping")
-@SqlResultSetMapping(
-    name = "SessionStudentDataMapping",
-    classes =
-        @ConstructorResult(
-            targetClass = SessionStudentData.class,
-            columns = {
-              @ColumnResult(name = "firstName", type = String.class),
-              @ColumnResult(name = "lastName", type = String.class),
-              @ColumnResult(name = "studentId", type = Integer.class),
-              @ColumnResult(name = "rowNum", type = Integer.class),
-              @ColumnResult(name = "assessmentPointsEarned", type = BigDecimal.class),
-              @ColumnResult(name = "assessmentPointsMax", type = BigDecimal.class)
-            }))
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.tutortoise.service.session.SessionNamedQueries.FIND_STUDENT_INFO_BY_PARENT;
+import static org.tutortoise.service.session.SessionNamedQueries.FIND_STUDENT_PROGRESS_BY_SUBJECT;
+
 @Entity
 @Table(name = "session")
 @Data
-public class Session {
+@NamedNativeQueries({
+  @NamedNativeQuery(
+      name = "findStudentInfoByParent",
+      query = FIND_STUDENT_INFO_BY_PARENT,
+      resultSetMapping = "SessionStudentDataMapping"),
+  @NamedNativeQuery(
+      name = "studentProgressBySubject",
+      query = FIND_STUDENT_PROGRESS_BY_SUBJECT,
+      resultSetMapping = "SessionStudentSubjectDataMapping")
+})
+@SqlResultSetMappings({
+  @SqlResultSetMapping(
+      name = "SessionStudentDataMapping",
+      classes =
+          @ConstructorResult(
+              targetClass = SessionStudentData.class,
+              columns = {
+                @ColumnResult(name = "firstName", type = String.class),
+                @ColumnResult(name = "lastName", type = String.class),
+                @ColumnResult(name = "studentId", type = Integer.class),
+                @ColumnResult(name = "rowNum", type = Integer.class),
+                @ColumnResult(name = "assessmentPointsEarned", type = BigDecimal.class),
+                @ColumnResult(name = "assessmentPointsMax", type = BigDecimal.class)
+              })),
+  @SqlResultSetMapping(
+      name = "SessionStudentSubjectDataMapping",
+      classes =
+          @ConstructorResult(
+              targetClass = SessionStudentSubjectData.class,
+              columns = {
+                @ColumnResult(name = "studentId", type = Integer.class),
+                @ColumnResult(name = "subjectId", type = Integer.class),
+                @ColumnResult(name = "studentName", type = String.class),
+                @ColumnResult(name = "subject", type = String.class),
+                @ColumnResult(name = "totalSessionsHours", type = Integer.class),
+                @ColumnResult(name = "totalSessionsHoursCompleted", type = Integer.class)
+              }))
+})
+public class Session implements SessionNamedQueries {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -99,6 +99,10 @@ public class Session {
   @JoinColumn(name = "subject_id_fk", nullable = false)
   private Subject subject;
 
-  @OneToMany(mappedBy = "session", fetch =  FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(
+      mappedBy = "session",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
   private List<CreditTransaction> transactions = new ArrayList<>();
 }

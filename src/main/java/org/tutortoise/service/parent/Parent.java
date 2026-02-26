@@ -2,39 +2,40 @@ package org.tutortoise.service.parent;
 
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.Data;
 import org.tutortoise.service.credit.CreditTransaction;
 import org.tutortoise.service.session.Session;
 import org.tutortoise.service.student.Student;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
-@Table(name="parent")
+@Table(name = "parent")
 @Data
 public class Parent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="parent_id")
+    @Column(name = "parent_id")
     private Integer parentId;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name="email")
+    @Column(name = "email")
     private String email;
 
-    @Column(name="phone")
+    @Column(name = "phone")
     private String phone;
 
-    @Column(name="password_encrypted")
+    @Column(name = "password_encrypted")
     private String passwordEncrypted;
 
-    @Column(name="current_credit_amount")
+    @Column(name = "current_credit_amount")
     private double currentCreditAmount;
 
     @OneToMany(mappedBy = "parent",
@@ -48,11 +49,11 @@ public class Parent {
     private List<Student> students = new ArrayList<>();
 
     @OneToMany(mappedBy = "parent",
-    cascade = CascadeType.ALL,
-    orphanRemoval = true)
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<CreditTransaction> transactions = new ArrayList<>();
 
-    public void addTransaction(CreditTransaction transaction)  {
+    public void addTransaction(CreditTransaction transaction) {
         transactions.add(transaction);
         transaction.setParent(this);
     }

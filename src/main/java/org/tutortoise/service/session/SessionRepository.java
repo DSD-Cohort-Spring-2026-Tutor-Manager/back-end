@@ -1,9 +1,10 @@
 package org.tutortoise.service.session;
 
-import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Integer> {
@@ -19,4 +20,8 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
           "SELECT count(*) FROM session WHERE parent_id_fk = :parentId AND session_status = :status",
       nativeQuery = true)
   int findSessionCountByParentIdAndStatus(Integer parentId, String status);
+
+  @Query(name = "studentProgressBySubject")
+  List<SessionStudentSubjectData> findStudentProgressBySubject(Integer parentId);
+
 }
