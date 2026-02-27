@@ -1,10 +1,13 @@
 package org.tutortoise.service.session;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.tutortoise.service.parent.Parent;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -26,4 +29,18 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     List<SessionStudentSubjectData> findStudentProgressBySubject(Integer parentId);
 
     int countSessionByParentParentId(Integer parentParentId);
+
+
+    Integer countBySessionStatusAndDatetimeStartedBetween(
+            SessionStatus status,
+            LocalDateTime start,
+            LocalDateTime end
+    );
+
+    Page<Session> findBySessionStatusAndDatetimeStartedBetween(
+            SessionStatus status,
+            LocalDateTime start,
+            LocalDateTime end,
+            Pageable pageable
+    );
 }
