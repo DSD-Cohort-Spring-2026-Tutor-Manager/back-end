@@ -44,3 +44,4 @@ public interface SessionNamedQueries {
             "GROUP BY sess.student_id_fk, sess.subject_id_fk, stu.first_name, stu.last_name, sub.subject, sub.total_sessions_hours";
 
 }
+

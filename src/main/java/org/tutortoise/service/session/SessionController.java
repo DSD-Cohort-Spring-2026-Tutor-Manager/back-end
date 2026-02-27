@@ -50,4 +50,9 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessions(tutorId, status));
     }
 
+    @GetMapping(path = "/open", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<SessionDTO>> getOpenSessions() {
+        return ResponseEntity.ok(sessionService.getOpenSessions());
+    }
+
 }

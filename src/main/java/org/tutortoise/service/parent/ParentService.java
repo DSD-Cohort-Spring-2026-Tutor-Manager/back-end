@@ -6,10 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.advice.HttpRestResponse;
+import org.tutortoise.service.credit.CreditService;
+import org.tutortoise.service.session.SessionDTO;
 import org.tutortoise.service.session.SessionService;
 import org.tutortoise.service.session.SessionStatus;
 import org.tutortoise.service.session.SessionStudentData;
+import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
+import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
 
 import java.math.BigDecimal;
@@ -23,6 +27,8 @@ public class ParentService {
 
     private final SessionService sessionService;
     private final ParentRepository parentRepository;
+    private final StudentRepository studentRepository;
+    private final CreditService creditService;
 
     public ParentDTO getStudentDetailsByParent(
             @Positive(message = "Parent id must be positive integer") Integer parentId) {
@@ -178,5 +184,11 @@ public class ParentService {
         });
 
         return parentDTO;
+    }
+
+    public SessionDTO bookSession(Integer sessionId, Integer parentId, Integer studentId) {
+      Parent parent = parentRepository.findById(parentId).orElse(null);
+      creditService.redeemCredit(parent);
+      return sessionService.assignStudentToSession(sessionId, parentId, studentId);
     }
 }

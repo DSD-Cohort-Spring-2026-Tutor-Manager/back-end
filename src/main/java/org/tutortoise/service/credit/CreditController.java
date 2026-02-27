@@ -13,7 +13,6 @@ import java.util.List;
 public class CreditController {
 
     private final CreditService creditService;
-
     private final CreditTransactionRepository transactionRepository;
 
     public CreditController(CreditService creditService, CreditTransactionRepository transactionRepository) {
