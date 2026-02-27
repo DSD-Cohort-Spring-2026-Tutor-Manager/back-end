@@ -45,6 +45,10 @@ public class SessionService {
     }
 
     public int findSessionCountByParentIdAndStatus(Integer parentId, String status) {
+        if( status == null ) {
+            return sessionRepository.countSessionByParentParentId(parentId);
+        }
+
         return sessionRepository.findSessionCountByParentIdAndStatus(parentId, status);
     }
 
@@ -95,6 +99,8 @@ public class SessionService {
                                                     SubjectDTO.builder()
                                                             .subjectId(element.subjectId())
                                                             .subjectName(element.subject())
+                                                            .totalSubjectHoursCompleted(element.totalSessionsHoursCompleted())
+                                                            .totalSubjectHours(element.totalSessionsHours())
                                                             .progressPercentage(
                                                                     calculateProgressPercentage(
                                                                             element.totalSessionsHoursCompleted(),
