@@ -11,6 +11,7 @@ import org.tutortoise.service.session.SessionDTO;
 import org.tutortoise.service.session.SessionService;
 import org.tutortoise.service.session.SessionStatus;
 import org.tutortoise.service.session.SessionStudentData;
+import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
 import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
