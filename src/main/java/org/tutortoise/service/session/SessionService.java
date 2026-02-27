@@ -148,7 +148,7 @@ public class SessionService {
     }
 
     public SessionDTO assignStudentToSession(Integer sessionId, Integer parentId, Integer studentId) {
-        Session session = sessionRepository.findBySessionId(sessionId);
+        Session session = sessionRepository.findById(sessionId).orElse(null);
         Parent parent = parentRepository.findById(parentId).orElse(null);
         Student student = studentRepository.findById(studentId).orElse(null);
 
