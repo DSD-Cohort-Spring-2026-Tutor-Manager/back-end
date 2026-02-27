@@ -67,7 +67,7 @@ public class SessionService {
                         StudentDTO studentDTO =
                                 StudentDTO.builder()
                                         .studentId(element.studentId())
-                                        .studentName(element.studentName())
+                                        .studentName(element.status())
                                         .subjects(new ArrayList<>())
                                         .build();
 
@@ -95,6 +95,8 @@ public class SessionService {
                                                     SubjectDTO.builder()
                                                             .subjectId(element.subjectId())
                                                             .subjectName(element.subject())
+                                                            .totalSubjectHoursCompleted(element.totalSessionsHoursCompleted())
+                                                            .totalSubjectHours(element.totalSessionsHours())
                                                             .progressPercentage(
                                                                     calculateProgressPercentage(
                                                                             element.totalSessionsHoursCompleted(),

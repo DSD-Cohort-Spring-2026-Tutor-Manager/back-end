@@ -28,19 +28,20 @@ public interface SessionNamedQueries {
             + "GROUP BY stu.first_name, stu.last_name, sdt.student_id_fk, sdt.rowNum "
             + "order by sdt.rowNum, sdt.student_id_fk";
 
-    String FIND_STUDENT_PROGRESS_BY_SUBJECT = "SELECT sess.student_id_fk as studentId, " +
-            "sess.subject_id_fk as subjectId, " +
-            "stu.first_name || ' ' || stu.last_name as studentName," +
-            "sub.subject as subject," +
-            "sub.total_sessions_hours as totalSessionsHours," +
-            "sum(sess.duration_hours) as totalSessionsHoursCompleted " +
-            "FROM session as sess," +
-            "student as stu," +
-            "subject as sub " +
-            "WHERE session_status = 'completed' " +
-            "AND sess.parent_id_fk = :parentId " +
-            "AND sess.student_id_fk = stu.student_id " +
-            "AND sess.subject_id_fk = sub.subject_id " +
-            "GROUP BY sess.student_id_fk, sess.subject_id_fk, stu.first_name, stu.last_name, sub.subject, sub.total_sessions_hours";
+    String FIND_STUDENT_PROGRESS_BY_SUBJECT = "select sess.student_id_fk as studentId," +
+            "       sess.subject_id_fk as subjectId," +
+            "       sess.session_status as status," +
+            "       sess.datetime_started as datetime," +
+            "       stu.first_name || ' ' || stu.last_name as studentName," +
+            "       sub.subject as subject," +
+            "       sub.total_sessions_hours as totalSessionHours," +
+            "       sess.duration_hours as totalSessionsHoursCompleted" +
+            "from session sess," +
+            "     student stu," +
+            "     subject sub" +
+            "where sess.parent_id_fk = 1" +
+            "  and sess.student_id_fk = stu.student_id" +
+            "  and sess.subject_id_fk = sub.subject_id" +
+            "order by sess.student_id_fk, sess.subject_id_fk,sess.datetime_started";
 
 }
