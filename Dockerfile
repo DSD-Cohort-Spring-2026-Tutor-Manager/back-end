@@ -4,12 +4,7 @@ WORKDIR /app
 COPY pom.xml .
 COPY src src
 
-# Copy Maven wrapper
-COPY mvnw .
-
-# Set execution permission for the Maven wrapper
-RUN chmod +x ./mvnw
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final Docker image using eclipse-temurin
 FROM eclipse-temurin:21-jdk-jammy
