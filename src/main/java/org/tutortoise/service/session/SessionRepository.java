@@ -43,4 +43,10 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
             LocalDateTime end,
             Pageable pageable
     );
+
+    @Query(
+            value =
+                    "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'scheduled'",
+            nativeQuery = true)
+    List<Session> findOpenSessions();
 }

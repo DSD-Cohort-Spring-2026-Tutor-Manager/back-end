@@ -1,6 +1,8 @@
 package org.tutortoise.service.session;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.tutortoise.service.credit.CreditTransaction;
 import org.tutortoise.service.parent.Parent;
@@ -19,6 +21,7 @@ import static org.tutortoise.service.session.SessionNamedQueries.FIND_STUDENT_PR
 @Entity
 @Table(name = "session")
 @Data
+@Builder
 @NamedNativeQueries({
   @NamedNativeQuery(
       name = "findStudentInfoByParent",
@@ -57,6 +60,7 @@ import static org.tutortoise.service.session.SessionNamedQueries.FIND_STUDENT_PR
                 @ColumnResult(name = "totalSessionsHoursCompleted", type = Integer.class)
               }))
 })
+@AllArgsConstructor
 public class Session implements SessionNamedQueries {
 
   @Id
@@ -84,11 +88,11 @@ public class Session implements SessionNamedQueries {
   private Double assessmentPointsMax;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "parent_id_fk", nullable = false)
+  @JoinColumn(name = "parent_id_fk")
   private Parent parent;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "student_id_fk", nullable = false)
+  @JoinColumn(name = "student_id_fk")
   private Student student;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -105,4 +109,104 @@ public class Session implements SessionNamedQueries {
       cascade = CascadeType.ALL,
       orphanRemoval = true)
   private List<CreditTransaction> transactions = new ArrayList<>();
+
+  public Session() {
+  }
+
+
+  public Integer getSessionId() {
+    return sessionId;
+  }
+
+  public void setSessionId(Integer sessionId) {
+    this.sessionId = sessionId;
+  }
+
+  public Double getDurationsHours() {
+    return durationsHours;
+  }
+
+  public void setDurationsHours(Double durationsHours) {
+    this.durationsHours = durationsHours;
+  }
+
+  public SessionStatus getSessionStatus() {
+    return sessionStatus;
+  }
+
+  public void setSessionStatus(SessionStatus sessionStatus) {
+    this.sessionStatus = sessionStatus;
+  }
+
+  public LocalDateTime getDatetimeStarted() {
+    return datetimeStarted;
+  }
+
+  public void setDatetimeStarted(LocalDateTime datetimeStarted) {
+    this.datetimeStarted = datetimeStarted;
+  }
+
+  public Double getAssessmentPointsEarned() {
+    return assessmentPointsEarned;
+  }
+
+  public void setAssessmentPointsEarned(Double assessmentPointsEarned) {
+    this.assessmentPointsEarned = assessmentPointsEarned;
+  }
+
+  public Double getAssessmentPointsGoal() {
+    return assessmentPointsGoal;
+  }
+
+  public void setAssessmentPointsGoal(Double assessmentPointsGoal) {
+    this.assessmentPointsGoal = assessmentPointsGoal;
+  }
+
+  public Double getAssessmentPointsMax() {
+    return assessmentPointsMax;
+  }
+
+  public void setAssessmentPointsMax(Double assessmentPointsMax) {
+    this.assessmentPointsMax = assessmentPointsMax;
+  }
+
+  public Parent getParent() {
+    return parent;
+  }
+
+  public void setParent(Parent parent) {
+    this.parent = parent;
+  }
+
+  public Student getStudent() {
+    return student;
+  }
+
+  public void setStudent(Student student) {
+    this.student = student;
+  }
+
+  public Tutor getTutor() {
+    return tutor;
+  }
+
+  public void setTutor(Tutor tutor) {
+    this.tutor = tutor;
+  }
+
+  public Subject getSubject() {
+    return subject;
+  }
+
+  public void setSubject(Subject subject) {
+    this.subject = subject;
+  }
+
+  public List<CreditTransaction> getTransactions() {
+    return transactions;
+  }
+
+  public void setTransactions(List<CreditTransaction> transactions) {
+    this.transactions = transactions;
+  }
 }

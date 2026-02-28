@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.tutortoise.service.session.SessionDTO;
 
 @RestController
 @RequestMapping("/api/parent")
@@ -78,4 +79,24 @@ public class ParentController {
     return ResponseEntity.ok(parentDTO);
   }
 
+  @Operation(
+          summary = "Retrieves student sessions with progress",
+          description =
+                  "This API allows parents to purchase an open session for a student"
+                          + "The API checks if the parent has sufficient number of credits required for purchase."
+                          + "If the parent has sufficient number of credits, then the credit will be spent from the parent account"
+                          + "The student and parent will both be added into the session")
+  @ApiResponses(
+          value = {
+                  @ApiResponse(responseCode = "200", description = "Successfully purchased credit"),
+                  @ApiResponse(responseCode = "500", description = "Internal server error")
+          })
+  @PostMapping(value = "book/{sessionId}/{parentId}/{studentId}", produces = "application/json")
+  public @ResponseBody ResponseEntity<SessionDTO> bookSession(
+          @PathVariable @Positive(message = "Session id must be positive integer") Integer sessionId,
+          @PathVariable @Positive(message = "Parent id must be positive integer") Integer parentId,
+          @PathVariable @Positive(message = "Student id must be positive integer") Integer studentId)
+  {
+    return ResponseEntity.ok(parentService.bookSession(sessionId, parentId, studentId));
+  }
 }

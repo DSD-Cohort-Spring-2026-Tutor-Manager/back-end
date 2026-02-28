@@ -33,11 +33,11 @@ public class SessionDTO {
 
     return new SessionDTO(
             session.getSessionId(),
-            session.getParent().getParentId(),
-            session.getStudent().getStudentId(),
-            session.getStudent().getFirstName(),
-            session.getStudent().getLastName(),
-            session.getStudent().getNotes(),
+            session.getParent() == null ? null : session.getParent().getParentId(),
+            session.getStudent() == null ? null : session.getStudent().getStudentId(),
+            session.getStudent() == null ? null :session.getStudent().getFirstName(),
+            session.getStudent() == null ? null :session.getStudent().getLastName(),
+            session.getStudent() == null ? null :session.getStudent().getNotes(),
             session.getSubject().getSubject(),
             session.getTutor().getTutorId(),
             session.getTutor().getFirstName() + " " + session.getTutor().getLastName(),
