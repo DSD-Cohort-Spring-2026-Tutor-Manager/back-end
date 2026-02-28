@@ -2,11 +2,10 @@
 FROM eclipse-temurin:21-jdk-jammy AS build
 WORKDIR /app
 COPY pom.xml .
-COPY src src
-
+COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final Docker image using eclipse-temurin
+# Stage 2: Run
 FROM eclipse-temurin:21-jdk-jammy
 VOLUME /tmp
 
