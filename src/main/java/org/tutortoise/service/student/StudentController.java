@@ -1,10 +1,7 @@
 package org.tutortoise.service.student;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/student")
@@ -24,5 +21,32 @@ public class StudentController {
             request.getLastName()
     );
     return ResponseEntity.ok(student);
+  }
+
+  @GetMapping("/{studentId}/note")
+  public ResponseEntity<StudentNoteDTO> getStudentNote(
+          @RequestParam Integer tutorId,
+          @PathVariable Integer studentId) {
+
+    return ResponseEntity.ok(
+            studentService.getStudentNote(tutorId, studentId)
+    );
+  }
+
+
+  @PutMapping("/{studentId}/note")
+  public ResponseEntity<StudentNoteDTO> updateStudentNote(
+          @RequestParam Integer tutorId,
+          @PathVariable Integer studentId,
+          @RequestBody StudentNoteDTO request) {
+
+    StudentNoteDTO updated =
+            studentService.updateStudentNote(
+                    tutorId,
+                    studentId,
+                    request.getNotes()
+            );
+
+    return ResponseEntity.ok(updated);
   }
 }
