@@ -4,20 +4,48 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.tutortoise.service.parent.Parent;
+import org.tutortoise.service.parent.ParentRepository;
+import org.tutortoise.service.parent.ParentService;
+import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
+import org.tutortoise.service.student.StudentRepository;
+import org.tutortoise.service.subject.Subject;
 import org.tutortoise.service.subject.SubjectDTO;
+import org.tutortoise.service.tutor.Tutor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+//import static jdk.internal.classfile.Classfile.build;
 
 @Service
 public class SessionService {
 
     private final SessionRepository sessionRepository;
+    private final ParentRepository parentRepository;
+    private final StudentRepository studentRepository;
 
-    public SessionService(SessionRepository sessionRepository) {
+    public SessionService(SessionRepository sessionRepository, ParentRepository parentRepository, StudentRepository studentRepository) {
         this.sessionRepository = sessionRepository;
+        this.parentRepository = parentRepository;
+        this.studentRepository = studentRepository;
+
+    }
+
+    public SessionDTO createSession(Tutor tutor, Subject subject, Integer year, Integer month, Integer day, Integer hour,
+                                    Integer minute) {
+        Session session = Session.builder()
+                .tutor(tutor)
+                .subject(subject)
+                .datetimeStarted(LocalDateTime.of(year, month, day, hour, minute))
+                .sessionStatus(SessionStatus.scheduled)
+                .durationsHours(1.0)
+                .build();
+        return SessionDTO.convertToDTO(session);
     }
 
     public List<SessionDTO> getSessions(String tutorId, String status) {
@@ -45,6 +73,10 @@ public class SessionService {
     }
 
     public int findSessionCountByParentIdAndStatus(Integer parentId, String status) {
+        if( status == null ) {
+            return sessionRepository.countSessionByParentParentId(parentId);
+        }
+
         return sessionRepository.findSessionCountByParentIdAndStatus(parentId, status);
     }
 
@@ -95,6 +127,8 @@ public class SessionService {
                                                     SubjectDTO.builder()
                                                             .subjectId(element.subjectId())
                                                             .subjectName(element.subject())
+                                                            .totalSubjectHoursCompleted(element.totalSessionsHoursCompleted())
+                                                            .totalSubjectHours(element.totalSessionsHours())
                                                             .progressPercentage(
                                                                     calculateProgressPercentage(
                                                                             element.totalSessionsHoursCompleted(),
@@ -106,6 +140,22 @@ public class SessionService {
                 });
 
         return studentDTOList;
+    }
+
+    public List<SessionDTO> getOpenSessions() {
+        List<Session> openSessions = sessionRepository.findOpenSessions();
+        return openSessions.stream().map(SessionDTO::convertToDTO).toList();
+    }
+
+    public SessionDTO assignStudentToSession(Integer sessionId, Integer parentId, Integer studentId) {
+        Session session = sessionRepository.findById(sessionId).orElse(null);
+        Parent parent = parentRepository.findById(parentId).orElse(null);
+        Student student = studentRepository.findById(studentId).orElse(null);
+
+        session.setParent(parent);
+        session.setStudent(student);
+        sessionRepository.save(session);
+        return SessionDTO.convertToDTO(session);
     }
 
     private Double calculateProgressPercentage(Integer hoursCompleted, Integer totalHours) {

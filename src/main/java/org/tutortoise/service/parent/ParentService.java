@@ -6,10 +6,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.advice.HttpRestResponse;
+import org.tutortoise.service.credit.CreditService;
+import org.tutortoise.service.session.SessionDTO;
 import org.tutortoise.service.session.SessionService;
 import org.tutortoise.service.session.SessionStatus;
 import org.tutortoise.service.session.SessionStudentData;
+import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
+import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
 
 import java.math.BigDecimal;
@@ -23,6 +27,8 @@ public class ParentService {
 
     private final SessionService sessionService;
     private final ParentRepository parentRepository;
+    private final StudentRepository studentRepository;
+    private final CreditService creditService;
 
     public ParentDTO getStudentDetailsByParent(
             @Positive(message = "Parent id must be positive integer") Integer parentId) {
@@ -113,13 +119,13 @@ public class ParentService {
                     parentDTO.setCreditBalance(parent.getCurrentCreditAmount());
                     List<StudentDTO> studentDTOList = sessionService.getStudentProgressBySubject(parentId);
 
-                    if( studentId != null) {
+                    if (studentId != null) {
                         studentDTOList = studentDTOList.stream()
                                 .filter(student -> student.getStudentId().equals(studentId))
                                 .collect(Collectors.toList());
                     }
 
-                    if( subjectId != null ) {
+                    if (subjectId != null) {
                         AtomicReference<List<SubjectDTO>> list = new AtomicReference<>(new ArrayList<>());
                         studentDTOList
                                 .forEach(student -> {
@@ -144,7 +150,45 @@ public class ParentService {
         return parentDTO;
     }
 
-    public Parent getParent(Integer parentId) {
-        return parentRepository.findById(parentId).orElse(null);
+    public ParentDTO getStudentInformation(final Integer parentId, final Integer studentId) {
+        ParentDTO parentDTO = new ParentDTO();
+        parentDTO.setParentId(parentId);
+        parentDTO.setStatus(HttpStatus.OK);
+        parentDTO.setOperationStatus(HttpRestResponse.SUCCESS);
+
+        parentRepository.findById(parentId).ifPresentOrElse(parent -> {
+            parentDTO.setParentName(parent.getFirstName() + " " + parent.getLastName());
+            parentDTO.setParentEmail(parent.getEmail());
+            parentDTO.setCreditBalance(parent.getCurrentCreditAmount());
+            parentDTO.setSessionCount(sessionService.findSessionCountByParentIdAndStatus(parentId, null));
+
+            if (CollectionUtils.isEmpty(parent.getStudents())) {
+                parentDTO.setStatus(HttpStatus.NOT_FOUND);
+                parentDTO.setMessage(String.format("No students found for Parent with id : %s", parentId));
+                parentDTO.setOperationStatus(HttpRestResponse.FAILED);
+                return;
+            }
+
+            List<StudentDTO> studentDTOList = parent.getStudents().stream()
+                    .filter(student -> studentId == null || student.getStudentId().equals(studentId))
+                    .map(student -> StudentDTO.builder()
+                    .studentName(student.getFirstName() + " " + student.getLastName())
+                    .studentId(student.getStudentId())
+                    .build()).toList();
+
+            parentDTO.setStudents(studentDTOList);
+        }, () -> {
+            parentDTO.setStatus(HttpStatus.NOT_FOUND);
+            parentDTO.setMessage(String.format("Parent with id : %s not found", parentId));
+            parentDTO.setOperationStatus(HttpRestResponse.FAILED);
+        });
+
+        return parentDTO;
+    }
+
+    public SessionDTO bookSession(Integer sessionId, Integer parentId, Integer studentId) {
+      Parent parent = parentRepository.findById(parentId).orElse(null);
+      creditService.redeemCredit(parent);
+      return sessionService.assignStudentToSession(sessionId, parentId, studentId);
     }
 }

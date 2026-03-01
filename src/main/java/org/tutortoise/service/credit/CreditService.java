@@ -49,6 +49,32 @@ public class CreditService {
 
     }
 
+    @Transactional
+    public CreditResponseDTO redeemCredit(Parent parent) {
+        double parentCreditBalance = getBalance(parent.getParentId());
+        if (parentCreditBalance < 1.0) {
+            // TODO
+        }
+        parentCreditBalance -= 1;
+        CreditTransaction transaction = new CreditTransaction();
+        transaction.setNumberOfCredits(1);
+        transaction.setTransactionTotal(0.0);
+        transaction.setParent(parent);
+        transaction.setType(TransactionType.redeem);
+        transaction.setDateTime(LocalDateTime.now());
+        parent.addTransaction(transaction);
+        parent.setCurrentCreditAmount(parentCreditBalance);
+        parentRepository.save(parent);
+        transactionRepository.save(transaction);
+        return new CreditResponseDTO(
+                parent.getParentId(),
+                1,
+                0.0,
+                parent.getCurrentCreditAmount(),
+                LocalDateTime.now()
+        );
+    }
+
     public Double getBalance(int parentId){
         return parentRepository.findById(parentId)
                 .orElseThrow(()-> new RuntimeException("Parent not found")).
@@ -60,6 +86,8 @@ public class CreditService {
         List<CreditTransaction> transactions = transactionRepository.findByParentParentId(parentId);
         return transactions.stream().map(this::convertToDTO).toList();
     }
+
+
 
     private CreditHistoryDTO convertToDTO(CreditTransaction creditTransaction) {
         return new CreditHistoryDTO
