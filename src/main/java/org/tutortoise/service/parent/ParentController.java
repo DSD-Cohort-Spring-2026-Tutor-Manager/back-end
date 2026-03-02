@@ -28,7 +28,7 @@ public class ParentController {
                   @ApiResponse(responseCode = "200", description = "Successful information retrieval"),
                   @ApiResponse(responseCode = "500", description = "Internal server error")
           })
-  @GetMapping(value = "/{parentId}/", produces = "application/json")
+  @GetMapping(value = "/{parentId}", produces = "application/json")
   public @ResponseBody ResponseEntity<ParentDTO> getStudentInfoForParent(
           @PathVariable @Positive(message = "Parent id must be positive integer") Integer parentId,
           @RequestParam(value = "studentId", required = false)
