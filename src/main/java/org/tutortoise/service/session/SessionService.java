@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.parent.ParentRepository;
-import org.tutortoise.service.parent.ParentService;
 import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
 import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.Subject;
 import org.tutortoise.service.subject.SubjectDTO;
 import org.tutortoise.service.tutor.Tutor;
+import org.tutortoise.service.tutor.TutorSessionRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ public class SessionService {
     }
 
     public int findSessionCountByParentIdAndStatus(Integer parentId, String status) {
-        if( status == null ) {
+        if (status == null) {
             return sessionRepository.countSessionByParentParentId(parentId);
         }
 
@@ -164,5 +164,36 @@ public class SessionService {
         }
         double percent = Math.round((hoursCompleted.doubleValue() / totalHours.doubleValue()) * 100);
         return Math.min(percent, 100.0);
+    }
+
+    public Session completeAndGradeSession(TutorSessionRequest request) {
+        return null;
+    }
+
+    public Session completeAndGradeSession(final Integer sessionId, final Integer tutorId, final Integer grade) {
+        Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+        if (sessionOptional.isEmpty()) {
+            throw new IllegalArgumentException("Session not found with id: " + sessionId);
+        }
+
+        Session session = sessionOptional.get();
+
+        validateSessionBeforeCompleting(sessionId, tutorId, session);
+
+        session.setSessionStatus(SessionStatus.completed);
+        session.setAssessmentPointsEarned(grade.doubleValue());
+        return sessionRepository.save(session);
+    }
+
+    private void validateSessionBeforeCompleting(Integer sessionId, Integer tutorId, Session session) {
+        if (session.getTutor() == null || !session.getTutor().getTutorId().equals(tutorId)) {
+            throw new IllegalArgumentException("Tutor with id: %d is not assigned to session with id: %d".formatted(tutorId, sessionId));
+        }
+
+        if (session.getSessionStatus() == SessionStatus.completed) {
+            throw new IllegalArgumentException("Session with id: %d is already in completed status.".formatted(sessionId));
+        } else if(session.getSessionStatus() == SessionStatus.cancelled) {
+            throw new IllegalArgumentException("Session with id: %d is cancelled.".formatted(sessionId));
+        }
     }
 }
