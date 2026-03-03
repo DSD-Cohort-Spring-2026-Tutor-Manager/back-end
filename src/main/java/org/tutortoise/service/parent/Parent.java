@@ -2,11 +2,7 @@ package org.tutortoise.service.parent;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.tutortoise.service.credit.CreditTransaction;
 import org.tutortoise.service.session.Session;
 import org.tutortoise.service.student.Student;
