@@ -39,4 +39,32 @@ public class StudentService {
         .sessions(student.getSessions().stream().map(SessionDTO::convertToDTO).toList())
         .build();
   }
+
+  public StudentNoteDTO getStudentNote(Integer tutorId, Integer studentId) {
+    Student student = studentRepository.findById(studentId).orElseThrow(() ->
+            new RuntimeException("Student not found"));
+
+    return new StudentNoteDTO(
+            student.getStudentId(),
+            student.getFirstName(),
+            student.getLastName(),
+            student.getNotes()
+    );
+
+  }
+
+    public StudentNoteDTO updateStudentNote(Integer tutorId, Integer studentId, String note) {
+      Student student = studentRepository.findById(studentId).orElseThrow(() ->
+              new RuntimeException("Student not found"));
+              student.setNotes(note);
+
+              Student updatedStudent = studentRepository.save(student);
+
+      return new StudentNoteDTO(
+              updatedStudent.getStudentId(),
+              updatedStudent.getFirstName(),
+              updatedStudent.getLastName(),
+              updatedStudent.getNotes()
+      );
+  }
 }
