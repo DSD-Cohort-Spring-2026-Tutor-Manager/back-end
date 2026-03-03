@@ -166,10 +166,6 @@ public class SessionService {
         return Math.min(percent, 100.0);
     }
 
-    public Session completeAndGradeSession(TutorSessionRequest request) {
-        return null;
-    }
-
     public Session completeAndGradeSession(final Integer sessionId, final Integer tutorId, final Integer grade) {
         Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
         if (sessionOptional.isEmpty()) {

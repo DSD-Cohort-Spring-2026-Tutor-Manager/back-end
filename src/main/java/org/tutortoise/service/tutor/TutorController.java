@@ -6,7 +6,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/tutor")
@@ -26,7 +29,7 @@ public class TutorController {
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             })
     @PutMapping("/assign-grade")
-    public @ResponseBody ResponseEntity<TutorDTO> assignGradeAndCompleteSession(@Validated @RequestBody TutorSessionRequest request) {
+    public ResponseEntity<TutorDTO> assignGradeAndCompleteSession(@Validated @RequestBody TutorSessionRequest request) {
         TutorDTO tutorDTO = tutorService.completeAndGradeSession(request);
         return ResponseEntity.ok(tutorDTO);
     }

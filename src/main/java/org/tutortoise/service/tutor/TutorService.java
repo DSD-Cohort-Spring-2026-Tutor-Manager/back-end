@@ -18,7 +18,7 @@ public class TutorService {
                 request.getGrade()
         );
 
-        TutorDTO tutorDTO = TutorDTO.builder()
+        return TutorDTO.builder()
                 .tutorId(session.getTutor().getTutorId())
                 .sessionId(session.getSessionId())
                 .studentId(session.getStudent().getStudentId())
@@ -30,6 +30,5 @@ public class TutorService {
                 .subject(session.getSubject().getSubject())
                 .studentName("%s %s".formatted(session.getStudent().getFirstName(), session.getStudent().getLastName()))
                 .build();
-        return tutorDTO;
     }
 }
