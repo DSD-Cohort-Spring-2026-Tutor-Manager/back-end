@@ -25,8 +25,8 @@ public class TutorController {
                     @ApiResponse(responseCode = "200", description = "Successful information retrieval"),
                     @ApiResponse(responseCode = "500", description = "Internal server error")
             })
-    @PutMapping("/update-session")
-    public @ResponseBody ResponseEntity<TutorDTO> createTutor(@Validated @RequestBody TutorSessionRequest request) {
+    @PutMapping("/assign-grade")
+    public @ResponseBody ResponseEntity<TutorDTO> assignGradeAndCompleteSession(@Validated @RequestBody TutorSessionRequest request) {
         TutorDTO tutorDTO = tutorService.completeAndGradeSession(request);
         return ResponseEntity.ok(tutorDTO);
     }
