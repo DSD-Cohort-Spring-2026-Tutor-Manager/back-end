@@ -5,7 +5,6 @@ public enum SessionStatus {
     completed("completed"),
     cancelled("cancelled"),
     all("all");
-
     private final String value;
 
     SessionStatus(String value) {

@@ -53,7 +53,7 @@ public class CreditService {
     public CreditResponseDTO redeemCredit(Parent parent) {
         double parentCreditBalance = getBalance(parent.getParentId());
         if (parentCreditBalance < 1.0) {
-            // TODO
+            throw new InsufficientCreditsException("You do not have enough credits to book the session");
         }
         parentCreditBalance -= 1;
         CreditTransaction transaction = new CreditTransaction();
