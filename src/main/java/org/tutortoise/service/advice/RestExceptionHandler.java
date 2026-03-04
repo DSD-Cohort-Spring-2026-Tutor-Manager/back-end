@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.tutortoise.service.credit.InsufficientCreditsException;
 import org.tutortoise.service.login.InvalidCredentialsException;
 import org.tutortoise.service.login.InvalidRoleException;
 import org.tutortoise.service.login.UserNotFoundException;
@@ -60,6 +61,16 @@ public class RestExceptionHandler {
     response.setMessage(ex.getMessage());
     response.setOperationStatus(HttpRestResponse.FAILED);
     return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(InsufficientCreditsException.class)
+  public ResponseEntity<HttpRestResponse> handleInsufficientCreditsException(
+      InsufficientCreditsException ex) {
+    HttpRestResponse response = new HttpRestResponse();
+    response.setStatus(HttpStatus.PAYMENT_REQUIRED);
+    response.setMessage(ex.getMessage());
+    response.setOperationStatus(HttpRestResponse.FAILED);
+    return new ResponseEntity<>(response, HttpStatus.PAYMENT_REQUIRED);
   }
 
   @ExceptionHandler(RuntimeException.class)
