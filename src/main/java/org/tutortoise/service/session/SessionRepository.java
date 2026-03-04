@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Integer> {
@@ -48,4 +49,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
                     "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'scheduled'",
             nativeQuery = true)
     List<Session> findOpenSessions();
+
+    Optional<Session> findBySessionIdOrderByDatetimeStartedDesc(Integer sessionId);
+
 }

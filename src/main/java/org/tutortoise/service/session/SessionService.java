@@ -12,7 +12,6 @@ import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.Subject;
 import org.tutortoise.service.subject.SubjectDTO;
 import org.tutortoise.service.tutor.Tutor;
-import org.tutortoise.service.tutor.TutorSessionRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,18 +33,6 @@ public class SessionService {
         this.parentRepository = parentRepository;
         this.studentRepository = studentRepository;
 
-    }
-
-    public SessionDTO createSession(Tutor tutor, Subject subject, Integer year, Integer month, Integer day, Integer hour,
-                                    Integer minute) {
-        Session session = Session.builder()
-                .tutor(tutor)
-                .subject(subject)
-                .datetimeStarted(LocalDateTime.of(year, month, day, hour, minute))
-                .sessionStatus(SessionStatus.scheduled)
-                .durationsHours(1.0)
-                .build();
-        return SessionDTO.convertToDTO(session);
     }
 
     public List<SessionDTO> getSessions(String tutorId, String status) {
@@ -166,22 +153,30 @@ public class SessionService {
         return Math.min(percent, 100.0);
     }
 
-    public Session completeAndGradeSession(final Integer sessionId, final Integer tutorId, final Integer grade) {
-        Optional<Session> sessionOptional = sessionRepository.findById(sessionId);
+    public Session completeAndGradeSession(final Integer sessionId, final Integer tutorId, final int grade) {
+        // Validate input parameters
+        if (sessionId == null) {
+            throw new IllegalArgumentException("Session id is required and cannot be null");
+        }
+        if (tutorId == null) {
+            throw new IllegalArgumentException("Tutor id is required and cannot be null");
+        }
+
+        Optional<Session> sessionOptional = sessionRepository.findBySessionIdOrderByDatetimeStartedDesc(sessionId);
         if (sessionOptional.isEmpty()) {
-            throw new IllegalArgumentException("Session not found with id: " + sessionId);
+            throw new IllegalArgumentException("Session not found with id: %d".formatted(sessionId));
         }
 
         Session session = sessionOptional.get();
 
-        validateSessionBeforeCompleting(sessionId, tutorId, session);
+        validateSessionBeforeCompleting(sessionId, tutorId, grade, session);
 
         session.setSessionStatus(SessionStatus.completed);
-        session.setAssessmentPointsEarned(grade.doubleValue());
+        session.setAssessmentPointsEarned(Double.valueOf(grade+""));
         return sessionRepository.save(session);
     }
 
-    private void validateSessionBeforeCompleting(Integer sessionId, Integer tutorId, Session session) {
+    private void validateSessionBeforeCompleting(Integer sessionId, Integer tutorId, int grade, Session session) {
         if (session.getTutor() == null || !session.getTutor().getTutorId().equals(tutorId)) {
             throw new IllegalArgumentException("Tutor with id: %d is not assigned to session with id: %d".formatted(tutorId, sessionId));
         }
@@ -191,5 +186,10 @@ public class SessionService {
         } else if(session.getSessionStatus() == SessionStatus.cancelled) {
             throw new IllegalArgumentException("Session with id: %d is cancelled.".formatted(sessionId));
         }
+
+        if( Double.valueOf(grade) > session.getAssessmentPointsMax()) {
+            throw new IllegalArgumentException("Grade cannot be greater than maximum allowed grade of : %s".formatted(session.getAssessmentPointsMax()));
+        }
+
     }
 }

@@ -1,21 +1,21 @@
 package org.tutortoise.service.tutor;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 
 @Data
 public class TutorSessionRequest {
 
-    @Positive(message = "Tutor id must be positive integer")
+    @NotNull(message = "Tutor id is required")
+    @Positive(message = "Tutor id must be a positive integer")
     private Integer tutorId;
 
-    @Positive(message = "Session id must be positive integer")
+    @NotNull(message = "Session id is required")
+    @Positive(message = "Session id must be a positive integer")
     private Integer sessionId;
 
-    @Positive(message = "Tutor id must be positive integer")
-    @Min(value = 0)
-    @Max(value = 100)
-    private Integer grade;
+    @Min(value = 0, message = "Grade must be between 0 and 100")
+    private int grade;
 }

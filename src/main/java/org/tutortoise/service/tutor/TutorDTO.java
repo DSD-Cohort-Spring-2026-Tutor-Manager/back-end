@@ -18,5 +18,6 @@ public class TutorDTO {
     private String tutorName;
     private String subject;
     private String studentName;
+    private String notes;
 
 }
