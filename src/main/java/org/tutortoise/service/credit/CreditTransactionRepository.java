@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface CreditTransactionRepository extends JpaRepository<CreditTransaction, Integer> {
     List<CreditTransaction> findByParentParentId(Integer parentId);
-
     @Query("""
         SELECT COALESCE(SUM(ct.numberOfCredits), 0)
         FROM CreditTransaction ct

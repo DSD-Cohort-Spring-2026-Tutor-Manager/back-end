@@ -20,7 +20,6 @@ public class CreditController {
         this.transactionRepository = transactionRepository;
     }
 
-
     @Operation(summary = "Parents buy credit", description = "1 credit = 1 hour of tutoring")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful operation"),

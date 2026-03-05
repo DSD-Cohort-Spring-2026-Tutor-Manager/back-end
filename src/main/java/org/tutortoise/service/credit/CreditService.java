@@ -50,7 +50,7 @@ public class CreditService {
     }
 
     @Transactional
-    public CreditResponseDTO redeemCredit(Parent parent) {
+    public void redeemCredit(Parent parent) {
         double parentCreditBalance = getBalance(parent.getParentId());
         if (parentCreditBalance < 1.0) {
             throw new InsufficientCreditsException("You do not have enough credits to book the session");
@@ -66,13 +66,7 @@ public class CreditService {
         parent.setCurrentCreditAmount(parentCreditBalance);
         parentRepository.save(parent);
         transactionRepository.save(transaction);
-        return new CreditResponseDTO(
-                parent.getParentId(),
-                1,
-                0.0,
-                parent.getCurrentCreditAmount(),
-                LocalDateTime.now()
-        );
+        LocalDateTime.now();
     }
 
     public Double getBalance(int parentId){
