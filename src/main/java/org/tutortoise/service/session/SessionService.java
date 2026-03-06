@@ -187,8 +187,11 @@ public class SessionService {
             throw new IllegalArgumentException("Session with id: %d is cancelled.".formatted(sessionId));
         }
 
-        if( Double.valueOf(grade) > session.getAssessmentPointsMax()) {
-            throw new IllegalArgumentException("Grade cannot be greater than maximum allowed grade of : %s".formatted(session.getAssessmentPointsMax()));
+        if (session.getAssessmentPointsMax() != null
+                && Double.valueOf(grade) > session.getAssessmentPointsMax()) {
+            throw new IllegalArgumentException(
+                    "Grade cannot be greater than maximum allowed grade of : %s"
+                            .formatted(session.getAssessmentPointsMax()));
         }
 
     }
