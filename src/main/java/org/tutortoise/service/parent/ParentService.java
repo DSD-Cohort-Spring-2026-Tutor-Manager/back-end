@@ -187,7 +187,10 @@ public class ParentService {
 
     public SessionDTO bookSession(Integer sessionId, Integer parentId, Integer studentId) {
       Parent parent = parentRepository.findById(parentId).orElse(null);
+      if(parent == null) {
+        throw new IllegalArgumentException(String.format("Parent with id : %s not found", parentId));
+      }
       creditService.redeemCredit(parent);
-      return sessionService.assignStudentToSession(sessionId, parentId, studentId);
+      return sessionService.assignStudentToSession(sessionId, parent, studentId);
     }
 }
