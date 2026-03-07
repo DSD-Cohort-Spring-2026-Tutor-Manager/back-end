@@ -137,7 +137,7 @@ public class SessionService {
     public SessionDTO assignStudentToSession(Integer sessionId, Parent parent, Integer studentId) {
         Session session = sessionRepository.findById(sessionId).orElse(null);
 
-        if (session != null) {
+        if (session == null) {
             throw new IllegalArgumentException("Session not available for scheduling with parents.");
         }
 
