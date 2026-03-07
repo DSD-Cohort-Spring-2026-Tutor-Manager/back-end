@@ -3,17 +3,16 @@ package org.tutortoise.service.session;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.parent.ParentRepository;
 import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
 import org.tutortoise.service.student.StudentRepository;
-import org.tutortoise.service.subject.Subject;
 import org.tutortoise.service.subject.SubjectDTO;
-import org.tutortoise.service.tutor.Tutor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -134,15 +133,35 @@ public class SessionService {
         return openSessions.stream().map(SessionDTO::convertToDTO).toList();
     }
 
-    public SessionDTO assignStudentToSession(Integer sessionId, Integer parentId, Integer studentId) {
+    @Transactional(propagation = Propagation.MANDATORY)
+    public SessionDTO assignStudentToSession(Integer sessionId, Parent parent, Integer studentId) {
         Session session = sessionRepository.findById(sessionId).orElse(null);
-        Parent parent = parentRepository.findById(parentId).orElse(null);
-        Student student = studentRepository.findById(studentId).orElse(null);
 
+        if (session == null) {
+            throw new IllegalArgumentException("Session not available for scheduling with parents.");
+        }
+
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            throw new IllegalArgumentException("Student not found with id: %d".formatted(studentId));
+        }
+
+        validateSessionAvailaibiliy(session);
+
+        session.setSessionStatus(SessionStatus.scheduled);
         session.setParent(parent);
         session.setStudent(student);
         sessionRepository.save(session);
         return SessionDTO.convertToDTO(session);
+    }
+
+    private static void validateSessionAvailaibiliy(Session session) {
+        switch (session.getSessionStatus()) {
+            case scheduled ->
+                    throw new IllegalArgumentException("Session with id: %d is already scheduled.".formatted(session.getSessionId()));
+            case completed ->
+                    throw new IllegalArgumentException("Session with id: %d is already completed.".formatted(session.getSessionId()));
+        }
     }
 
     private Double calculateProgressPercentage(Integer hoursCompleted, Integer totalHours) {
@@ -172,7 +191,7 @@ public class SessionService {
         validateSessionBeforeCompleting(sessionId, tutorId, grade, session);
 
         session.setSessionStatus(SessionStatus.completed);
-        session.setAssessmentPointsEarned(Double.valueOf(grade+""));
+        session.setAssessmentPointsEarned(Double.valueOf(grade + ""));
         return sessionRepository.save(session);
     }
 
@@ -183,7 +202,7 @@ public class SessionService {
 
         if (session.getSessionStatus() == SessionStatus.completed) {
             throw new IllegalArgumentException("Session with id: %d is already in completed status.".formatted(sessionId));
-        } else if(session.getSessionStatus() == SessionStatus.cancelled) {
+        } else if (session.getSessionStatus() == SessionStatus.cancelled) {
             throw new IllegalArgumentException("Session with id: %d is cancelled.".formatted(sessionId));
         }
 

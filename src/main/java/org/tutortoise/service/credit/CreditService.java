@@ -1,7 +1,8 @@
 package org.tutortoise.service.credit;
 
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.parent.ParentRepository;
 
@@ -49,7 +50,7 @@ public class CreditService {
 
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public CreditResponseDTO redeemCredit(Parent parent) {
         double parentCreditBalance = getBalance(parent.getParentId());
         if (parentCreditBalance < 1.0) {
