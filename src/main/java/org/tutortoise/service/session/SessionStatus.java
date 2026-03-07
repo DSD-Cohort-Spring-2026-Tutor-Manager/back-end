@@ -4,6 +4,7 @@ public enum SessionStatus {
     scheduled("scheduled"),
     completed("completed"),
     cancelled("cancelled"),
+    open("open"),
     all("all");
 
     private final String value;

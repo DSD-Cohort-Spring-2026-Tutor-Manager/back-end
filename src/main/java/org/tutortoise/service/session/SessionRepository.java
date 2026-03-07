@@ -46,7 +46,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 
     @Query(
             value =
-                    "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'scheduled'",
+                    "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'open'",
             nativeQuery = true)
     List<Session> findOpenSessions();
 
