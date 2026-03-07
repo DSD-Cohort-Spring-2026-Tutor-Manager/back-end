@@ -4,6 +4,8 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.advice.HttpRestResponse;
 import org.tutortoise.service.credit.CreditService;
@@ -185,6 +187,7 @@ public class ParentService {
         return parentDTO;
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public SessionDTO bookSession(Integer sessionId, Integer parentId, Integer studentId) {
       Parent parent = parentRepository.findById(parentId).orElse(null);
       if(parent == null) {

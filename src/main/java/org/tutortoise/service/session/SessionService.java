@@ -3,6 +3,8 @@ package org.tutortoise.service.session;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.parent.Parent;
 import org.tutortoise.service.parent.ParentRepository;
@@ -131,10 +133,11 @@ public class SessionService {
         return openSessions.stream().map(SessionDTO::convertToDTO).toList();
     }
 
+    @Transactional(propagation = Propagation.MANDATORY)
     public SessionDTO assignStudentToSession(Integer sessionId, Parent parent, Integer studentId) {
         Session session = sessionRepository.findById(sessionId).orElse(null);
 
-        if (session == null) {
+        if (session != null) {
             throw new IllegalArgumentException("Session not available for scheduling with parents.");
         }
 
