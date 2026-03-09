@@ -196,4 +196,23 @@ public class ParentService {
       creditService.redeemCredit(parent);
       return sessionService.assignStudentToSession(sessionId, parent, studentId);
     }
-}
+
+     public RegisterParentDTO createParent(RegisterParentDTO request) {
+
+         Parent parent = new Parent();
+         parent.setFirstName(request.getFirstName());
+         parent.setLastName(request.getLastName());
+         parent.setEmail(request.getEmail());
+         parent.setPhone(request.getPhone());
+         parent.setPasswordEncrypted(request.getPassword());
+
+         Parent saved = parentRepository.save(parent);
+
+         return new RegisterParentDTO(
+                 saved.getFirstName(),
+                 saved.getLastName(),
+                 saved.getEmail(),
+                 saved.getPhone()
+         );
+     }
+    }

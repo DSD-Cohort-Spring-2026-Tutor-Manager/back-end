@@ -10,6 +10,7 @@ import org.tutortoise.service.session.SessionService;
 public class TutorService {
 
     private final SessionService sessionService;
+    private final TutorRepository tutorRepository;
 
     public TutorDTO completeAndGradeSession(TutorSessionRequest request) {
         Session session = sessionService.completeAndGradeSession(
@@ -31,4 +32,24 @@ public class TutorService {
                 .studentName("%s %s".formatted(session.getStudent().getFirstName(), session.getStudent().getLastName()))
                 .build();
     }
+
+    public RegisterTutorDTO createTutor(RegisterTutorDTO request) {
+
+        Tutor tutor = new Tutor();
+        tutor.setFirstName(request.getFirstName());
+        tutor.setLastName(request.getLastName());
+        tutor.setEmail(request.getEmail());
+        tutor.setPhone(request.getPhone());
+        tutor.setPasswordEncrypted(request.getPassword());
+
+        Tutor saved = tutorRepository.save(tutor);
+
+        return new RegisterTutorDTO(
+                saved.getFirstName(),
+                saved.getLastName(),
+                saved.getEmail(),
+                saved.getPhone()
+        );
+    }
+
 }

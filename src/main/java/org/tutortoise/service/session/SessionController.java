@@ -6,9 +6,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -53,6 +58,17 @@ public class SessionController {
     @GetMapping(path = "/open", produces = "application/json")
     public @ResponseBody ResponseEntity<List<SessionDTO>> getOpenSessions() {
         return ResponseEntity.ok(sessionService.getOpenSessions());
+    }
+
+    @GetMapping("/revenue/sessions")
+    @Operation(summary = "Get sessions within date range")
+    public ResponseEntity<List<SessionDTO>> getSessionsByDateRange(
+            @RequestParam LocalDateTime startDateTime,
+            @RequestParam LocalDateTime endDateTime) {
+
+        return ResponseEntity.ok(
+                sessionService.getSessionsByDateRange(startDateTime, endDateTime)
+        );
     }
 
 }
