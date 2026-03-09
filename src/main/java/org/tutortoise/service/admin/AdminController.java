@@ -50,7 +50,7 @@ public class AdminController {
 
     @Operation(summary = "Create new tutor")
     @PostMapping("/createTutor")
-    public ResponseEntity<RegisterTutorDTO> createParent(
+    public ResponseEntity<RegisterTutorDTO> createTutor(
             @RequestBody RegisterTutorDTO request) {
 
         RegisterTutorDTO tutor = tutorService.createTutor(request);
