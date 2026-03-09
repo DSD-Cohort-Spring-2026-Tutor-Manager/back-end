@@ -52,4 +52,8 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 
     Optional<Session> findBySessionIdOrderByDatetimeStartedDesc(Integer sessionId);
 
+
+    List<Session> findByDatetimeStartedBetween(
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime);
 }

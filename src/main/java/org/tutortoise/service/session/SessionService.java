@@ -2,6 +2,8 @@ package org.tutortoise.service.session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import org.tutortoise.service.student.StudentDTO;
 import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -212,6 +215,23 @@ public class SessionService {
                     "Grade cannot be greater than maximum allowed grade of : %s"
                             .formatted(session.getAssessmentPointsMax()));
         }
+
+    }
+
+    public List<SessionDTO> getSessionsByDateRange(
+            LocalDateTime startDateTime,
+            LocalDateTime endDateTime) {
+
+        if (startDateTime.isAfter(endDateTime)) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
+
+        List<Session> sessions =
+                sessionRepository.findByDatetimeStartedBetween(startDateTime, endDateTime);
+
+       return sessions.stream()
+                .map(SessionDTO::convertToDTO)
+                .toList();
 
     }
 }
