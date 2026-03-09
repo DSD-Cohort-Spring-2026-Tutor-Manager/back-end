@@ -60,7 +60,7 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getOpenSessions());
     }
 
-    @GetMapping("/sessions")
+    @GetMapping("/revenue/sessions")
     @Operation(summary = "Get sessions within date range")
     public ResponseEntity<List<SessionDTO>> getSessionsByDateRange(
             @RequestParam LocalDateTime startDateTime,

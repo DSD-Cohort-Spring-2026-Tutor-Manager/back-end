@@ -1,15 +1,12 @@
 package org.tutortoise.service.admin;
 
 import io.swagger.v3.oas.annotations.Operation;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.tutortoise.service.parent.ParentDTO;
 import org.tutortoise.service.parent.ParentService;
 import org.tutortoise.service.parent.RegisterParentDTO;
 import org.tutortoise.service.tutor.RegisterTutorDTO;
