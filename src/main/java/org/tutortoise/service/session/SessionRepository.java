@@ -62,7 +62,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
             value =
                     "UPDATE session SET session_status = 'cancelled' " +
                             "WHERE session_status = 'open' " +
-                            "AND student_id_fk = NULL " +
+                            "AND student_id_fk IS NULL " +
                             "AND datetime_started < CURRENT_TIMESTAMP",
             nativeQuery = true)
     void setPastSessionsAsCancelled();
