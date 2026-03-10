@@ -46,7 +46,7 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 
     @Query(
             value =
-                    "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'open' ORDER BY datetime_started ASC",
+                    "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'open' AND datetime_started > CURRENT_TIMESTAMP ORDER BY datetime_started ASC",
             nativeQuery = true)
     List<Session> findOpenSessions();
 
