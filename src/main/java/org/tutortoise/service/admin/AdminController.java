@@ -7,10 +7,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.tutortoise.service.parent.ParentDTO;
 import org.tutortoise.service.parent.ParentService;
+import org.tutortoise.service.parent.ParentStudentDTO;
 import org.tutortoise.service.parent.RegisterParentDTO;
 import org.tutortoise.service.tutor.RegisterTutorDTO;
 import org.tutortoise.service.tutor.TutorService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/dashboard")
@@ -52,5 +56,11 @@ public class AdminController {
 
         RegisterTutorDTO tutor = tutorService.createTutor(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(tutor);
+    }
+
+    @GetMapping("/allParents")
+    public ResponseEntity<List<ParentStudentDTO>> getAllParents() {
+        List<ParentStudentDTO> parents = parentService.getAllParents();
+        return ResponseEntity.ok(parents);
     }
 }

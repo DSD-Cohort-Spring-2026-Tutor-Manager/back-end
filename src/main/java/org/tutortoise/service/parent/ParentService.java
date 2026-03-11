@@ -215,4 +215,21 @@ public class ParentService {
                  saved.getPhone()
          );
      }
+
+     public List<ParentStudentDTO> getAllParents() {
+
+         List<Object[]> results =  parentRepository.findParentsWithStudentCountNative();
+         List<ParentStudentDTO> parentStudentDTOS = results.stream().map(r -> new ParentStudentDTO(
+                 ((Number) r[0]).intValue(),
+                 (String) r[1],
+                 (String) r[2],
+                 (String) r[3],
+                 (String) r[4],
+                 ((Number) r[5]).doubleValue(),
+                 ((Number) r[6]).intValue()
+         )).toList();
+         return parentStudentDTOS;
+
+
+     }
     }
