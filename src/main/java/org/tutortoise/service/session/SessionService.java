@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.tutortoise.service.parent.Parent;
-import org.tutortoise.service.parent.ParentRepository;
 import org.tutortoise.service.student.Student;
 import org.tutortoise.service.student.StudentDTO;
 import org.tutortoise.service.student.StudentRepository;
@@ -16,7 +15,6 @@ import org.tutortoise.service.subject.SubjectDTO;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 //import static jdk.internal.classfile.Classfile.build;
 
@@ -220,22 +218,39 @@ public class SessionService {
         List<Session> sessions =
                 sessionRepository.findByDatetimeStartedBetween(startDateTime, endDateTime);
 
-       return sessions.stream()
+        return sessions.stream()
                 .map(SessionDTO::convertToDTO)
                 .toList();
 
     }
 
-    public List<SessionDTO> getSessionsByParent(final Integer parentId,final String status) {
-        List<Session> sessions = sessionRepository.findByParentParentId(parentId);
+    public List<SessionDTO> getSessionsByParent(final Integer parentId, final String status) {
 
-        if(CollectionUtils.isEmpty(sessions)) {
+        List<Session> sessions;
+
+
+
+        if (StringUtils.isBlank(status)) {
+            sessions = sessionRepository.findByParentParentId(parentId);
+        } else {
+            if( Strings.CI.equals(status, SessionStatus.scheduled.name()) ) {
+                sessions = sessionRepository.findByParentParentIdAndSessionStatusAndDatetimeStartedAfterOrderByDatetimeStartedAsc(
+                        parentId, SessionStatus.valueOf(status), LocalDateTime.now()
+                );
+            }else{
+                sessions = sessionRepository.findByParentParentIdAndSessionStatusAndDatetimeStartedBeforeOrderByDatetimeStartedDesc(
+                        parentId, SessionStatus.valueOf(status), LocalDateTime.now()
+                );
+            }
+
+        }
+
+        if (CollectionUtils.isEmpty(sessions)) {
             return Collections.emptyList();
         }
 
         List<SessionDTO> sessionDTOS = sessions.stream()
                 .filter(Objects::nonNull)
-                .filter(s -> StringUtils.isBlank(status) || s.getSessionStatus().name().equalsIgnoreCase(status))
                 .map(SessionDTO::convertToDTO)
                 .toList();
 

@@ -40,7 +40,6 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     );
 
 
-
     Page<Session> findBySessionStatusAndDatetimeStartedBetween(
             SessionStatus status,
             LocalDateTime start,
@@ -74,4 +73,8 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
             LocalDateTime endDateTime);
 
     List<Session> findByParentParentId(Integer parentId);
+
+    List<Session> findByParentParentIdAndSessionStatusAndDatetimeStartedAfterOrderByDatetimeStartedAsc(Integer parentId, SessionStatus sessionStatus, LocalDateTime now);
+
+    List<Session> findByParentParentIdAndSessionStatusAndDatetimeStartedBeforeOrderByDatetimeStartedDesc(Integer parentId, SessionStatus sessionStatus, LocalDateTime now);
 }
