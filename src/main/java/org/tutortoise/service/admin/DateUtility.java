@@ -19,4 +19,20 @@ public class DateUtility {
                 .withMinute(59)
                 .withSecond(59);
     }
+
+    public static LocalDateTime getStartOfLastWeek() {
+        return LocalDate.now()
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                .minusWeeks(1)
+                .atStartOfDay();
+    }
+
+    // End of last week (Sunday 23:59:59)
+    public static LocalDateTime getEndOfLastWeek() {
+        return getStartOfLastWeek()
+                .plusDays(6)
+                .withHour(23)
+                .withMinute(59)
+                .withSecond(59);
+    }
 }

@@ -21,4 +21,11 @@ public interface CreditTransactionRepository extends JpaRepository<CreditTransac
             @Param("start") LocalDateTime start,
             @Param("end") LocalDateTime end
     );
+    @Query("SELECT COALESCE(SUM(c.transactionTotal), 0) " +
+            "FROM CreditTransaction c " +
+            "WHERE c.dateTime >= :start AND c.dateTime <= :end")
+    Double getTransactionTotalInDateRange(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end
+    );
 }

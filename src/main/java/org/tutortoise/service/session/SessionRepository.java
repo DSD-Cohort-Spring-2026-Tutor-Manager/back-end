@@ -31,11 +31,13 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     int countSessionByParentParentId(Integer parentParentId);
 
 
-    Integer countBySessionStatusAndDatetimeStartedBetween(
-            SessionStatus status,
+    Integer countBySessionStatusInAndDatetimeStartedBetween(
+            List<SessionStatus> statuses,
             LocalDateTime start,
             LocalDateTime end
     );
+
+
 
     Page<Session> findBySessionStatusAndDatetimeStartedBetween(
             SessionStatus status,

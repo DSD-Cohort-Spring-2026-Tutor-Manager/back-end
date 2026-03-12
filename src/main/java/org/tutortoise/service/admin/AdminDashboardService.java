@@ -28,24 +28,45 @@ public class AdminDashboardService {
     public AdminDashboardDTO getDashboard(Pageable pageable){
         LocalDateTime start = DateUtility.getStartOfWeek();
         LocalDateTime end = DateUtility.getEndOfWeek();
+        LocalDateTime lastWeekStart = DateUtility.getStartOfLastWeek();
+        LocalDateTime lastWeekEnd = DateUtility.getEndOfLastWeek();
 
-        Integer totalCredits = creditTransactionRepository.sumByTypeAndDateTimeBetween
+        Integer totalCreditsThisWeeK = creditTransactionRepository.sumByTypeAndDateTimeBetween
                 (TransactionType.purchase,start,end);
 
-        if(totalCredits==null) totalCredits = 0;
+        Integer totalCreditLastWeek = creditTransactionRepository.sumByTypeAndDateTimeBetween
+                (TransactionType.purchase, lastWeekStart,lastWeekEnd);
 
-        Integer totalSessions = sessionRepository. countBySessionStatusAndDatetimeStartedBetween(SessionStatus.scheduled,
+        if(totalCreditsThisWeeK==null) totalCreditsThisWeeK = 0;
+        if(totalCreditLastWeek==null) totalCreditLastWeek = 0;
+
+        List<SessionStatus> statuses = List.of(
+                SessionStatus.scheduled,
+                SessionStatus.completed
+        );
+        Integer totalSessionsThisWeek = sessionRepository. countBySessionStatusInAndDatetimeStartedBetween(statuses,
                 start,end);
 
-        Page<Session> sessions = sessionRepository.findBySessionStatusAndDatetimeStartedBetween
-                (SessionStatus.scheduled, start,end,pageable);
+        Integer totalSessionsLastWeek = sessionRepository. countBySessionStatusInAndDatetimeStartedBetween(statuses,
+                lastWeekStart,lastWeekEnd);
 
-        List<SessionDTO> sessionDTOS = sessions.map(this::convertToDTO).getContent();
+        Double totalRevenueThisWeek = creditTransactionRepository.getTransactionTotalInDateRange(start,
+                end);
+
+        Double totalRevenueLastWeek = creditTransactionRepository.getTransactionTotalInDateRange(lastWeekStart,
+                lastWeekEnd);
+
+
+
 
         return new AdminDashboardDTO(
-                totalCredits,
-                totalSessions,
-                sessionDTOS
+                totalCreditsThisWeeK,
+                totalCreditLastWeek,
+                totalSessionsThisWeek,
+                totalSessionsLastWeek,
+                totalRevenueThisWeek,
+                totalRevenueLastWeek
+
         );
 
 
