@@ -6,10 +6,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +33,24 @@ public class SessionController {
         return ResponseEntity.ok(sessionService.getSessions(null, null));
     }
 
+    @Operation(summary = "Retrieves sessions by parent", description = "This API should return a list of sessions " +
+            "based on parent id. The parentId filter allows you to retrieve sessions for a specific parent, " +
+            "while the status filter allows you to retrieve sessions based on their status (e.g., open, scheduled, completed, " +
+            "cancelled, all). If no filters are provided, it will return all sessions.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful session retrieval"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping(path = "/parent/{parentId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<SessionDTO>> getSessionsByParent(
+            @PathVariable @Positive(message = "parentId needs to be a positive integer only") Integer parentId,
+            @RequestParam(required = false) String status) {
+        if (parentId == null) {
+            throw new IllegalArgumentException("Parent id cannot be null or blank");
+        }
+        return ResponseEntity.ok(sessionService.getSessionsByParent(parentId, status));
+    }
+
     @Operation(summary = "Retrieves sessions by filters", description = "This API should return a list of sessions " +
             "based on the provided filters. The tutorId filter allows you to retrieve sessions for a specific tutor, " +
             "while the status filter allows you to retrieve sessions based on their status (e.g., scheduled, completed, " +
@@ -49,7 +63,7 @@ public class SessionController {
     public @ResponseBody ResponseEntity<List<SessionDTO>> getSessions(
             @PathVariable @NotBlank @Positive(message = "tutorId needs to be a positive integer only") String tutorId,
             @RequestParam String status) {
-        if( StringUtils.isBlank(tutorId) ){
+        if (StringUtils.isBlank(tutorId)) {
             throw new IllegalArgumentException("Tutor id cannot be null or blank");
         }
         return ResponseEntity.ok(sessionService.getSessions(tutorId, status));
