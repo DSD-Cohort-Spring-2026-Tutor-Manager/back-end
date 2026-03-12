@@ -132,6 +132,7 @@ public class SessionService {
     }
 
     public List<SessionDTO> getOpenSessions() {
+        sessionRepository.setPastSessionsAsCancelled();
         List<Session> openSessions = sessionRepository.findOpenSessions();
         return openSessions.stream().map(SessionDTO::convertToDTO).toList();
     }

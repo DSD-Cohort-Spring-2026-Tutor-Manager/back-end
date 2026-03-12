@@ -52,6 +52,4 @@ public class CreditController {
     public ResponseEntity<List<CreditHistoryDTO>> getHistory(@PathVariable int parentId){
         return ResponseEntity.ok(creditService.getHistory(parentId));
     }
-
-
 }
