@@ -38,6 +38,24 @@ public class SessionController {
     }
 
     @Operation(summary = "Retrieves sessions by filters", description = "This API should return a list of sessions " +
+            "based on the provided filters. The parentId filter allows you to retrieve sessions for a specific parent, " +
+            "while the status filter allows you to retrieve sessions based on their status (e.g., scheduled, completed, " +
+            "cancelled, all). If no filters are provided, it will return all sessions.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful session retrieval"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping(path = "/parent/{parentId}", produces = "application/json")
+    public @ResponseBody ResponseEntity<List<SessionDTO>> getSessionsForParent(
+            @PathVariable @NotBlank @Positive(message = "parentId needs to be a positive integer only") String parentId,
+            @RequestParam String status) {
+        if(StringUtils.isBlank(parentId)){
+            throw new IllegalArgumentException("Parent ID cannot be null or blank");
+        }
+        return ResponseEntity.ok(sessionService.getSessionsForParent(parentId, status));
+    }
+
+    @Operation(summary = "Retrieves sessions by filters", description = "This API should return a list of sessions " +
             "based on the provided filters. The tutorId filter allows you to retrieve sessions for a specific tutor, " +
             "while the status filter allows you to retrieve sessions based on their status (e.g., scheduled, completed, " +
             "cancelled, all). If no filters are provided, it will return all sessions.")

@@ -2,8 +2,6 @@ package org.tutortoise.service.session;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +14,7 @@ import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //import static jdk.internal.classfile.Classfile.build;
 
@@ -35,6 +30,33 @@ public class SessionService {
         this.parentRepository = parentRepository;
         this.studentRepository = studentRepository;
 
+    }
+
+    public List<SessionDTO> getSessionsForParent(String parentId, String status) {
+        List<Session> sessions;
+        if (StringUtils.isBlank(parentId) && StringUtils.isBlank(status)) {
+            sessions = sessionRepository.findAll();
+        } else if (StringUtils.isBlank(status)
+                || Strings.CI.equals(status, SessionStatus.all.toString())) {
+            sessions = sessionRepository.findByParentParentId(Integer.parseInt(parentId));
+        } else {
+            sessions =
+                    sessionRepository.findByParentParentIdAndSessionStatus(
+                            Integer.parseInt(parentId), SessionStatus.session(status.toLowerCase()));
+            sessions = sortSessionsForStatus(sessions, status);
+        }
+
+        return sessions.stream().map(SessionDTO::convertToDTO).toList();
+    }
+
+    private List<Session> sortSessionsForStatus(List<Session> sessions, String status) {
+        if (SessionStatus.scheduled.toString().equals(status) ) {
+            return sessions.stream().sorted(Comparator.comparing(Session::getDatetimeStarted)).toList();
+        } else if (SessionStatus.completed.toString().equals(status)) {
+            return sessions.stream().sorted(Comparator.comparing(Session::getDatetimeStarted)).toList().reversed();
+        } else {
+            return sessions;
+        }
     }
 
     public List<SessionDTO> getSessions(String tutorId, String status) {

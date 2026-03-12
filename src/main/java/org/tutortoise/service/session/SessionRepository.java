@@ -12,7 +12,11 @@ import java.util.Optional;
 
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Integer> {
+    List<Session> findByParentParentId(Integer parentId);
+
     List<Session> findByTutorTutorId(Integer tutorId);
+
+    List<Session> findByParentParentIdAndSessionStatus(Integer parentId, SessionStatus status);
 
     List<Session> findByTutorTutorIdAndSessionStatus(Integer tutorId, SessionStatus status);
 
@@ -51,7 +55,6 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     List<Session> findOpenSessions();
 
     Optional<Session> findBySessionIdOrderByDatetimeStartedDesc(Integer sessionId);
-
 
     List<Session> findByDatetimeStartedBetween(
             LocalDateTime startDateTime,
