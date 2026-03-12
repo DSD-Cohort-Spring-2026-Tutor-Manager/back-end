@@ -56,4 +56,6 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     List<Session> findByDatetimeStartedBetween(
             LocalDateTime startDateTime,
             LocalDateTime endDateTime);
+
+    List<Session> findByParentParentId(Integer parentId);
 }

@@ -1,9 +1,8 @@
 package org.tutortoise.service.session;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,26 +15,17 @@ import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 //import static jdk.internal.classfile.Classfile.build;
 
 @Service
+@RequiredArgsConstructor
 public class SessionService {
 
     private final SessionRepository sessionRepository;
-    private final ParentRepository parentRepository;
     private final StudentRepository studentRepository;
-
-    public SessionService(SessionRepository sessionRepository, ParentRepository parentRepository, StudentRepository studentRepository) {
-        this.sessionRepository = sessionRepository;
-        this.parentRepository = parentRepository;
-        this.studentRepository = studentRepository;
-
-    }
 
     public List<SessionDTO> getSessions(String tutorId, String status) {
         List<Session> sessions;
@@ -233,5 +223,21 @@ public class SessionService {
                 .map(SessionDTO::convertToDTO)
                 .toList();
 
+    }
+
+    public List<SessionDTO> getSessionsByParent(final Integer parentId,final String status) {
+        List<Session> sessions = sessionRepository.findByParentParentId(parentId);
+
+        if(CollectionUtils.isEmpty(sessions)) {
+            return Collections.emptyList();
+        }
+
+        List<SessionDTO> sessionDTOS = sessions.stream()
+                .filter(Objects::nonNull)
+                .filter(s -> StringUtils.isBlank(status) || s.getSessionStatus().name().equalsIgnoreCase(status))
+                .map(SessionDTO::convertToDTO)
+                .toList();
+
+        return sessionDTOS;
     }
 }
