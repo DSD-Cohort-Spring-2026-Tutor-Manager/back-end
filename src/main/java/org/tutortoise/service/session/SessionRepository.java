@@ -1,7 +1,5 @@
 package org.tutortoise.service.session;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,15 +37,6 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
             LocalDateTime end
     );
 
-
-
-    Page<Session> findBySessionStatusAndDatetimeStartedBetween(
-            SessionStatus status,
-            LocalDateTime start,
-            LocalDateTime end,
-            Pageable pageable
-    );
-
     @Query(
             value =
                     "SELECT * FROM session WHERE student_id_fk is NULL AND session_status = 'open' AND datetime_started > CURRENT_TIMESTAMP ORDER BY datetime_started ASC",
@@ -72,4 +61,13 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
     List<Session> findByDatetimeStartedBetween(
             LocalDateTime startDateTime,
             LocalDateTime endDateTime);
+
+    List<Session> findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedAsc(
+            Integer tutorId, SessionStatus sessionStatus
+    );
+
+    List<Session> findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedDesc(
+            Integer tutorId,
+            SessionStatus sessionStatus
+    );
 }

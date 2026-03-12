@@ -16,10 +16,7 @@ import org.tutortoise.service.student.StudentRepository;
 import org.tutortoise.service.subject.SubjectDTO;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //import static jdk.internal.classfile.Classfile.build;
 
@@ -45,12 +42,32 @@ public class SessionService {
                 || Strings.CI.equals(status, SessionStatus.all.toString())) {
             sessions = sessionRepository.findByTutorTutorId(Integer.parseInt(tutorId));
         } else {
-            sessions =
-                    sessionRepository.findByTutorTutorIdAndSessionStatus(
-                            Integer.parseInt(tutorId), SessionStatus.session(status.toLowerCase()));
+            if( Strings.CI.equals(status, SessionStatus.scheduled.name()) ) {
+
+                sessions = sessionRepository.findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedAsc(
+                        Integer.parseInt(tutorId),
+                        SessionStatus.valueOf(status.toLowerCase())
+                );
+
+            } else if ( Strings.CI.equals(status, SessionStatus.completed.name()) ){
+                sessions = sessionRepository.findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedDesc(
+                        Integer.parseInt(tutorId),
+                        SessionStatus.valueOf(status.toLowerCase())
+                );
+            } else{
+                sessions =
+                        sessionRepository.findByTutorTutorIdAndSessionStatus(
+                                Integer.parseInt(tutorId), SessionStatus.session(status.toLowerCase()));
+            }
         }
 
-        return sessions.stream().map(SessionDTO::convertToDTO).toList();
+        if( CollectionUtils.isEmpty(sessions) ){
+            return Collections.emptyList();
+        }
+
+        return sessions.stream()
+                .filter(Objects::nonNull)
+                .map(SessionDTO::convertToDTO).toList();
     }
 
     public List<SessionStudentData> findStudentInfoByParent(Integer parentId) {
