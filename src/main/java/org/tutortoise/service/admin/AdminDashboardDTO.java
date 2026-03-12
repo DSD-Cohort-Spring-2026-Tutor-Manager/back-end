@@ -9,16 +9,22 @@ import java.util.List;
 public class AdminDashboardDTO {
 
     private Integer weeklyCreditSold;
+    private Integer lastWeeklyCreditSold;
     private Integer weeklySessionsBooked;
-    private List<SessionDTO>  bookedSessions;
+    private Integer lastWeeklySessionsBooked;
+    private Double weeklyCashRevenue;
+    private Double lastWeeklyCashRevenue;
+
 
     public AdminDashboardDTO() {
     }
 
-    public AdminDashboardDTO(Integer weeklyCreditSold, Integer weeklySessionsBooked, List<SessionDTO> bookedSessions) {
+    public AdminDashboardDTO(Integer weeklyCreditSold, Integer lastWeeklyCreditSold, Integer weeklySessionsBooked, Integer lastWeeklySessionsBooked, Double weeklyCashRevenue, Double lastWeeklyCashRevenue) {
         this.weeklyCreditSold = weeklyCreditSold;
+        this.lastWeeklyCreditSold = lastWeeklyCreditSold;
         this.weeklySessionsBooked = weeklySessionsBooked;
-        this.bookedSessions = bookedSessions;
+        this.lastWeeklySessionsBooked = lastWeeklySessionsBooked;
+        this.weeklyCashRevenue = weeklyCashRevenue;
+        this.lastWeeklyCashRevenue = lastWeeklyCashRevenue;
     }
-
 }
