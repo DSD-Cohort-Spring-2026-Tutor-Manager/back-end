@@ -35,9 +35,10 @@ public class SessionService {
         } else {
             if( Strings.CI.equals(status, SessionStatus.scheduled.name()) ) {
 
-                sessions = sessionRepository.findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedAsc(
+                sessions = sessionRepository.findByTutorTutorIdAndSessionStatusAndDatetimeStartedAfterOrderByDatetimeStartedAsc(
                         Integer.parseInt(tutorId),
-                        SessionStatus.valueOf(status.toLowerCase())
+                        SessionStatus.valueOf(status.toLowerCase()),
+                        LocalDateTime.now()
                 );
 
             } else if ( Strings.CI.equals(status, SessionStatus.completed.name()) ){

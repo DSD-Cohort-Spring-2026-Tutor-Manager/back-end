@@ -78,8 +78,8 @@ public interface SessionRepository extends JpaRepository<Session, Integer> {
 
     List<Session> findByParentParentIdAndSessionStatusAndDatetimeStartedBeforeOrderByDatetimeStartedDesc(Integer parentId, SessionStatus sessionStatus, LocalDateTime now);
 
-    List<Session> findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedAsc(
-            Integer tutorId, SessionStatus sessionStatus
+    List<Session> findByTutorTutorIdAndSessionStatusAndDatetimeStartedAfterOrderByDatetimeStartedAsc(
+            Integer tutorId, SessionStatus sessionStatus, LocalDateTime now
     );
 
     List<Session> findByTutorTutorIdAndSessionStatusOrderByDatetimeStartedDesc(
